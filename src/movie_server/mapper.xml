@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.example.BlogMapper">
+	
+	<!-- 회원가입할때 customer 테이블에서 정보를 삽입한다. -->
+	<insert id ="customerIns" parameterType="movie_server.CustomerVO">
+		insert into customer(cust_id, cust_password, cust_name, cust_birth, cust_phone,admin_yn, delete_yn, point) 
+    		values (#{cust_id}, #{cust_password}, #{cust_name}, #{cust_birth}, #{cust_phone}, #{member_local}, #{member_email}, '0', '0', 0)
+	</insert>
+	
+	<!-- 로그인할때 customer테이블에서 정보를 가져온다  -->
+	<select id="login" parameterType="String" resultType="movie_server.CustomerVO">
+	    select * FROM customer WHERE cust_id = #{cust_id} AND cust_password = #{cust_password}
+	</select>
+	
+	<!-- 로그인한 회원 정보 Login_info에 삽입 -->
+	<!-- 지호 -->
+	<insert id ="loginInfoInsert" parameterType="movie_server.CustomerVO">
+		insert into login_info(cust_id, cust_name, point) 
+    		values (#{cust_id}, #{cust_name}, #{point})
+	</insert>
+	
+
+	<!-- 아이디 중복 체크 (탈퇴한 회원의 아이디까지 사용할 수 없게) -->
+	<select id="idchk" resultType="movie_server.CustomerVO" parameterType="movie_server.CustomerVO">
+		SELECT COUNT(*) FROM customer WHERE cust_ID = #{cust_ID}
+	</select>
+	
+	<!-- 
+	<select id="custOne" parameterType="String" resultType="mybatis.com.ict.edu.VO">
+		select * from customer where custid = #{custid} 
+	</select>
+	
+	<insert id="custIns" parameterType="mybatis.com.ict.edu.VO">
+		insert into customer(custid, name, address, phone)
+		values(customer_seq.nextval,#{name},#{address},#{phone})
+	</insert>
+	
+	<delete id="custDel" parameterType="mybatis.com.ict.edu.VO">
+		delete from customer where custid = #{custid}
+	</delete>
+	
+	<update id="custUpdate" parameterType="mybatis.com.ict.edu.VO">
+		update customer set name=#{name}, address=#{address}, phone=#{phone}
+		where custid = #{custid}
+	</update>
+	 -->
+
+	 
+	 
+	 <!-- 지호 -->
+	 <!-- 로그인 한 회원 ID 가져오기 -->
+	<select id="getMemberLogin" resultType="java.lang.String">
+		SELECT CUST_ID FROM LOGIN_INFO
+	</select>
+	
+	<!-- 해당 회원의 잔여포인트 가져오기 -->
+	<select id="getRemainingPoints" resultType="java.lang.Integer" parameterType="movie_server.Pay_VO">
+		SELECT P.REMAINING_POINT
+		FROM LOGIN_INFO L
+		JOIN POINT P ON L.CUST_ID = P.CUST_ID
+		WHERE L.CUST_ID = #{cust_id}
+	</select>
+	
+	<!-- TICKET 테이블에 예매 정보 삽입 -->
+	<insert id="movieinsert" parameterType="movie_server.Pay_VO">
+		INSERT INTO TICKET(ticket_num, movie_id, cust_id, movie_name, theater_id, movie_date, start_time, end_time, theater_seat)
+		values(TICKET_SEQ.nextval, #{movie_id},#{cust_id}, #{movie_name}, #{theater_id}, #{movie_date}, #{start_time}, #{end_time}, #{theater_seat})
+	</insert>
+	
+	<!-- 포인트 충전 -->
+	<!-- CUSTOMER 테이블의 POINT 업데이트 -->
+	<update id="updateCustomerPoint"  parameterType="movie_server.Pay_VO">
+		UPDATE CUSTOMER
+		SET POINT = POINT + #{point}
+		WHERE CUST_ID = #{cust_id}
+	</update>
+	
+	<!-- LOGIN_INFO 테이블의 POINT 업데이트 -->
+	<update id="updateLoginInfoPoint" parameterType="movie_server.Pay_VO">
+		UPDATE LOGIN_INFO
+		SET POINT = POINT + #{point}
+		WHERE CUST_ID = #{cust_id}
+	</update>
+	
+	<!-- POINT 테이블의 REMAINING_POINT 업데이트 -->
+	<update id="updateRemainingPoint" parameterType="movie_server.Pay_VO">
+		UPDATE POINT
+    	SET REMAINING_POINT = REMAINING_POINT + #{point}
+    	WHERE CUST_ID = #{cust_id}
+	</update>
+	
+	<!-- 로그인 한 회원의 티켓 리스트 -->
+	<select id="getTicketList" parameterType="String" resultType="movie_server.MobileTicket_VO">
+		SELECT ticket_num, movie_name, start_time, movie_date, theater_id, theater_seat
+        FROM TICKET
+        WHERE CUST_ID = #{cust_id}
+	</select>
+	
+	<!-- 예매 취소 -->
+	<update id="cancelTicket" parameterType="int">
+  		DELETE FROM TICKET
+  		WHERE ticket_num = #{ticket_num}
+	</update>
+	 
+	 
+	 
+	 
+	 
+	 
+	 <!-- 지혜 -->
+	<!--영화목록 전체 가져오기  -->
+	 <select id="movieList" resultType="movie_server.TicketBox_VO">
+		select movie_name from movie
+	 </select>
+
+	<!-- 상영시간표 불러오기 1)시작 시간과 2)종료시간, 3)두개의 시간으로 검색 -->
+	<select id="stimeList" resultType="movie_server.TicketBox_VO">
+		select start_time from
+		movie_schedule
+	</select>
+	<select id="etimeList" resultType="movie_server.TicketBox_VO">
+		select end_time from
+		movie_schedule
+	</select>
+	<select id="getMovieTimes" parameterType="java.lang.String"
+		resultType="movie_server.TicketBox_VO">
+		SELECT start_time, end_time
+		FROM movie_schedule
+		WHERE movie_name = #{movieTitle}
+	</select>
+	 
+</mapper>
