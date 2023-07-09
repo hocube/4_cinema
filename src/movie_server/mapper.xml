@@ -47,11 +47,11 @@
 
 
 	<!-- 지호 -->
-	<!-- 로그인 한 회원 ID 가져오기 -->
-	<select id="getMemberLogin" resultType="java.lang.String">
-		SELECT CUST_ID FROM
-		LOGIN_INFO
-	</select>
+	<!-- Customer 에서 현재 로그인 한 회원정보 가져오기 -->
+   <select id="getMemberLogin" resultType="movie_server.CustomerVO">
+      SELECT * FROM customer
+      WHERE cust_id IN (SELECT cust_id FROM LOGIN_INFO)
+   </select>
 
 	<!-- 해당 회원의 잔여포인트 가져오기 -->
 	<select id="getRemainingPoints" resultType="java.lang.Integer"
@@ -79,8 +79,7 @@
 		parameterType="movie_server.Pay_VO">
 		UPDATE CUSTOMER
 		SET POINT = POINT + #{point}
-		WHERE CUST_ID
-		= #{cust_id}
+		WHERE CUST_ID = #{cust_id}
 	</update>
 
 	<!-- LOGIN_INFO 테이블의 POINT 업데이트 -->
@@ -88,8 +87,7 @@
 		parameterType="movie_server.Pay_VO">
 		UPDATE LOGIN_INFO
 		SET POINT = POINT + #{point}
-		WHERE
-		CUST_ID = #{cust_id}
+		WHERE CUST_ID = #{cust_id}
 	</update>
 
 	<!-- POINT 테이블의 REMAINING_POINT 업데이트 -->

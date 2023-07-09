@@ -35,15 +35,17 @@ public class TicketList extends JPanel{
 	public TicketList(Sign_in signin) {
 		this.sign_in = signin;
 		
+		setPreferredSize(new Dimension(600, 500));
+		setVisible(true);
 
 		Panel = new JPanel(new BorderLayout());
 		JPanel headerPanel = new JPanel(new BorderLayout());
 
 		// "티켓 리스트" 라벨 추가
 		JLabel titleLabel = new JLabel("티켓 리스트");
-		titleLabel.setFont(new Font("굴림", Font.BOLD, 25));
+		titleLabel.setFont(new Font("굴림", Font.BOLD, 35));
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER); // 가운데 정렬
-		titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10)); // 여백 추가
+		titleLabel.setBorder(BorderFactory.createEmptyBorder(70, 10, 10, 10)); // 여백 추가
 		headerPanel.add(titleLabel, BorderLayout.NORTH);
 		Panel.add(headerPanel, BorderLayout.NORTH);
 
@@ -57,7 +59,7 @@ public class TicketList extends JPanel{
 		// JScrollPane을 사용하여 JTable을 스크롤 가능하도록 추가
 		JScrollPane scrollPane = new JScrollPane(ticketTable);
 		// JScrollPane의 크기를 조정
-		scrollPane.setPreferredSize(new Dimension(800, 400));
+		scrollPane.setPreferredSize(new Dimension(500, 400));
 		// JPanel에 JScrollPane 추가
 		Panel.add(headerPanel, BorderLayout.NORTH);
 		Panel.add(scrollPane, BorderLayout.CENTER);
@@ -73,8 +75,6 @@ public class TicketList extends JPanel{
 		Panel.add(ButtonPanel, BorderLayout.SOUTH);
 
 		add(Panel);
-
-		setVisible(true);
 		
 		
 		

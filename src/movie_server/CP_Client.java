@@ -41,22 +41,31 @@ public class CP_Client extends Thread{
 						out.writeObject(p);
 						out.flush();
 						break esc; // 접속 해제
-                    case 102: // 로그인한 회원의 잔여 포인트 가져오기
+					case 101: // 현재 로그인한 회원 정보 조회
+						System.out.println("===CP_Client의 case 101===");
+						
+						CustomerVO loginMemberInfo = DAO.getMemberLogin();
+                    	p.setC_vo(loginMemberInfo);
+                    	
+						out.writeObject(p);
+						out.flush();
+						break;
+                    case 102: // 포인트 충전
                     	System.out.println("===CP_Client의 case 102===");
                     	
-//                    	currentUserId = Session.getCurrentUserId();
-//                    	int chargepoint = Pay_DAO.getRemainingPoints(currentUserId);
-//                    	p.setResult(chargepoint);
-//                    	out.writeObject(p);
-//                        out.flush();
+                    	Pay_VO p_vo = p.getP_vo();
+                    	DAO.updatePoint(p_vo);
+                    	
+						out.writeObject(p);
+						out.flush();
                         break;
                     case 103: // 결제 완료 후 티켓 INSERT
                     	System.out.println("===CP_Client의 case 103===");
 
-                    	Pay_VO p_vo = p.getP_vo();
-                    	result = DAO.getInsert(p_vo);
-                    	p.setResult(result); // DB 삽입 작업의 결과를 설정
-                    	System.out.println(result + "예매 완료!");
+//                    	Pay_VO p_vo = p.getP_vo();
+//                    	result = DAO.getInsert(p_vo);
+//                    	p.setResult(result); // DB 삽입 작업의 결과를 설정
+//                    	System.out.println(result + "예매 완료!");
                     	out.writeObject(p);
                     	out.flush();
                     	break;
@@ -108,13 +117,13 @@ public class CP_Client extends Thread{
 						p.setC_vo(DAO.getLogin(c_vo));
 						
 						if(DAO.getLogin(c_vo) != null) {
-							// 로그인 성공시에만 Login_info에 회원정보 삽입
+							// 로그인 성공시에만 Login_info 테이블에 삽입
 							// 로그인 테스트용으로 전화번호 가져와봄.
 							String phone = p.getC_vo().getCust_phone();
 							System.out.println("CP_Client :" + phone);
 							
-							// 로그인한 회원 정보 Login_info에 넣기
 							DAO.loginInfoInsert(p.getC_vo());
+		
 						}
 						//위의 if문은 주석처리해도 로그인은 성공함.
 						
@@ -140,8 +149,7 @@ public class CP_Client extends Thread{
 						
 						out.writeObject(p);
 						out.flush();
-						
-						
+					
 						break;
 					
 					case 502:	// 회원가입

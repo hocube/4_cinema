@@ -110,11 +110,11 @@ public class DAO {
 		return result;
 	}
 
-	// 로그인 한 회원 ID 가져오기
-	public static String getMemberLogin(Pay_VO pay_vo) {
+	// Login_info에서 현재 로그인 한 회원정보 가져오기
+	public static CustomerVO getMemberLogin() {
+		CustomerVO result = getSession().selectOne("getMemberLogin");
 		System.out.println("[DAO] getMemberLogin");
-		String cust_id = getSession().selectOne("getMemberLogin", pay_vo);
-		return cust_id;
+		return result;
 	}
 
 	// 해당 회원의 잔여포인트 가져오기
@@ -132,6 +132,8 @@ public class DAO {
 		try {
 			getSession().update("updateCustomerPoint", pay_vo);
 			getSession().update("updateLoginInfoPoint", pay_vo);
+			
+			// [0709 지호] Point 테이블 업데이트 안되는 상태 
 			getSession().update("updateRemainingPoint", pay_vo);
 			ss.commit(); // commit 호출
 		} catch (Exception e) {

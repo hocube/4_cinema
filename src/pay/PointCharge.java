@@ -109,7 +109,7 @@ public class PointCharge extends JPanel{
 //			
 //			@Override
 //			public void actionPerformed(ActionEvent e) {
-//				 
+//				int amount = getSelectedAmount(); //getSelectedAmount()의 return값을 amount에 저장
 //				System.out.println("amount:" + amount); 
 //				if(amount != 0) { // 0이 아닐때만 update = 값이 실제로 있을 때만
 //					Pay_VO pay_vo = new Pay_VO();
@@ -161,7 +161,6 @@ public class PointCharge extends JPanel{
 //		
 //		return 0; //버튼 선택 안 했을 때
 //		
-//	}
 //	}
 	}
 }

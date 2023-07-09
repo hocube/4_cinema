@@ -1,12 +1,12 @@
 package pay;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -23,6 +23,8 @@ public class PointChargeDialog extends JDialog {
 	JRadioButton jrb1, jrb2, jrb3, jrb4, jrb5, jrb6;
 	JButton pay, cancel;
 	ButtonGroup ButtonGroup;
+	private PointChargeListener listener;
+
 
 	public PointChargeDialog(Frame parent) {
 		super(parent, "포인트 충전", true);
@@ -70,7 +72,7 @@ public class PointChargeDialog extends JDialog {
 		jp3.add(jrb5);
 		jp3.add(jrb6);
 
-		// 결재, 취소
+		// 결제, 취소
 		jp4 = new JPanel();
 		pay = new JButton("충전하기");
 		cancel = new JButton("취소하기");
@@ -94,31 +96,63 @@ public class PointChargeDialog extends JDialog {
 		setLocationRelativeTo(null); //화면 가운데
         setResizable(false); //크기조정 불가
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		
+		// 충전 버튼
+		pay.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int selectedAmount = getSelectedAmount();
+				
+				// 선택한 충전 금액을 Main_login으로 전달
+				if (listener != null) {
+					listener.onPointCharge(selectedAmount);
+				}
+				
+				dispose(); // 다이얼로그 닫기
+			}
+		});
+		
+        // 취소 버튼
+		cancel.addActionListener(new ActionListener() {
+			@Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // 다이얼로그 닫기
+            }
+		});
 
-	}
-
-	// 충전 금액 설정 메서드
-	private int getSelectedAmount() {
-
-		if (jrb1.isSelected())
-			return 5000;
-
-		if (jrb2.isSelected())
-			return 10000;
-
-		if (jrb3.isSelected())
-			return 15000;
-
-		if (jrb4.isSelected())
-			return 20000;
-
-		if (jrb5.isSelected())
-			return 25000;
-
-		if (jrb5.isSelected())
-			return 30000;
-
-		return 0; // 버튼 선택 안 했을 때
-
-	}
+    }
+	
+    // 충전 금액 설정 메서드
+    private int getSelectedAmount() {
+       
+       if(jrb1.isSelected())
+          return 5000;
+       
+       if(jrb2.isSelected())
+          return 10000;
+       
+       if(jrb3.isSelected())
+          return 15000;
+       
+       if(jrb4.isSelected())
+          return 20000;
+       
+       if(jrb5.isSelected())
+          return 25000;
+       
+       if(jrb5.isSelected())
+          return 30000;
+       
+       return 0; //버튼 선택 안 했을 때
+    }
+    
+    // PointChargeListener 설정 메서드
+	public void setPointChargeListener(PointChargeListener listener) {
+		this.listener = listener;
+    }
+    
+    // 포인트 충전 완료 후 처리를 위한 리스너 인터페이스
+    public interface PointChargeListener {
+        void onPointCharge(int amount);
+    }
 }

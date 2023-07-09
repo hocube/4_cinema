@@ -18,7 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 import c_loginout.Sign_in;
-import pay.PointCharge;
+import pay.PointChargeDialog;
 
 
 public class Menu extends JPanel {

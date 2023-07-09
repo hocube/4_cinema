@@ -1,5 +1,6 @@
 package c_loginout;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -12,13 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import movie_server.Pay_VO;
+import movie_server.Protocol;
 import pay.PointChargeDialog;
+import pay.PointChargeDialog.PointChargeListener;
 
 public class Main_login extends JPanel {
+	private JButton main_point_charge_bt;
 	
-    // Main_login 패널에 추가될 버튼 및 컴포넌트들 선언
-    private JButton main_point_charge_bt;
-    
 	Sign_in sign_in;
 	// Movie_chart_view1 v1 = new Movie_chart_view1(); //두개 안씀
 	// Movie_chart_view2 v2 = new Movie_chart_view2();
@@ -26,6 +28,7 @@ public class Main_login extends JPanel {
 	// CardLayout card = new CardLayout();
 
 	public Main_login(Sign_in signin) {
+		
 		this.sign_in = signin;
 
 		this.setLayout(null);
@@ -38,7 +41,7 @@ public class Main_login extends JPanel {
 		this.add(logo_bt);
 
 		// 하단에 액션리스너
-		JButton mobile_ticket_bt = new JButton("티켓 리스트");
+		JButton mobile_ticket_bt = new JButton("모바일 티켓");
 		mobile_ticket_bt.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 		mobile_ticket_bt.setBounds(35, 35, 122, 49);
 		this.add(mobile_ticket_bt);
@@ -58,16 +61,20 @@ public class Main_login extends JPanel {
 		// 로그인시, 로그인한 정보 얻어서, 그사람의 이름 갖고오게 하기.
 		// 여기서 런을 안쓰게된다면 어떻게 프로토콜 부르지?
 		// sign_in 에서 run으로 명령쓰고, 여기로 xxx.add 였나? 다시 확인하기. ***
-		JLabel login_name_label = new JLabel("XXX님");
+		
+		// [0709 지호] 
+		JLabel login_name_label = new JLabel(signin.p.getC_vo().getCust_name() + " 님");
 		login_name_label.setHorizontalAlignment(SwingConstants.CENTER);
-		login_name_label.setBounds(402, 22, 57, 15);
+		login_name_label.setBounds(330, 22, 57, 15);
 		this.add(login_name_label);
 
 		// 위와 동일하게, run 이 필요한, 사람의 포인트.
 		// 로그인시, 로그인한 정보 얻어서, 그사람의 포인트 갖고오게 하기.
 		// 여기서 런을 안쓰게된다면 어떻게 프로토콜 부르지?
 		// sign_in 에서 run으로 명령쓰고, 여기로 xxx.add 였나? 다시 확인하기. ***
-		JLabel login_point_label = new JLabel("잔여포인트: XXX포인트");
+		
+		// [0709 지호] 
+		JLabel login_point_label = new JLabel("잔여포인트 : " + signin.p.getC_vo().getPoint());
 		login_point_label.setHorizontalAlignment(SwingConstants.CENTER);
 		login_point_label.setBounds(308, 41, 146, 15);
 		this.add(login_point_label);
@@ -143,10 +150,7 @@ public class Main_login extends JPanel {
 		// 로고이미지 붙이기.
 		logo_bt.setIcon(logo_img);
 
-		
-		
-		
-		
+
 		// 버튼 액션리스너 =================================================
 
 		// 1. 모바일티켓 버튼
@@ -154,8 +158,17 @@ public class Main_login extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				try {
 					signin.card.show(signin.pg, "t_list");
 					System.out.println("모바일티켓버튼 눌러 티켓리스트 전환 성공");
+					Protocol p = new Protocol();
+					p.setCmd(104);
+					signin.out.writeObject(p);
+					signin.out.flush();
+				} catch (Exception e2) {
+					
+				}
+				
 			}
 		});
 
@@ -175,16 +188,38 @@ public class Main_login extends JPanel {
 			}
 		});
 		
-		
-		
-
 		// 4. 포인트충전
-        main_point_charge_bt.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                PointChargeDialog dialog = new PointChargeDialog((Frame) SwingUtilities.getWindowAncestor(Main_login.this));
-                dialog.setVisible(true);
-            }
-        });
+		main_point_charge_bt.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        PointChargeDialog dialog = new PointChargeDialog((Frame) SwingUtilities.getWindowAncestor(Main_login.this));
+		        dialog.setPointChargeListener(new PointChargeListener() {
+		            public void onPointCharge(int amount) {
+		            	
+		                // PointChargeDialog에서 선택한 포인트
+		                System.out.println("충전된 포인트: " + amount);
+		                
+						try {
+							Pay_VO p_vo = new Pay_VO();
+							Protocol p = new Protocol();
+							
+							p_vo.setCust_id(signin.p.getC_vo().getCust_id());
+							p_vo.setPoint(amount);
+							p.setP_vo(p_vo);
+							p.setCmd(102);
+							
+							signin.out.writeObject(p);
+							signin.out.flush();
+							
+		                    signin.p.getC_vo().setPoint(signin.p.getC_vo().getPoint() + amount);
+		                    login_point_label.setText("잔여포인트 : " + signin.p.getC_vo().getPoint());
+						} catch (Exception e2) {
+							e2.printStackTrace();
+						}
+		            }
+		        });
+		        dialog.setVisible(true);
+		    }
+		});
 
 		// 5. 각 포스터 누르면 매표소로 각 이름 체크되서가져가기.
 		btnNewButton.addActionListener(new ActionListener() {
@@ -194,7 +229,7 @@ public class Main_login extends JPanel {
 				// 여기엔 제일 밑에 하나의 메서드를 작성해서 동일하게 할수있도록 하자.
 				// 각 다른 포스터를 클릭해도, get으로 가져와서 sql문으로 확인할거니.
 				// 동일할거라 생각된다. cmd도 찾아달라는 동일명령어일테니...?
-
+				
 			}
 		});
 
@@ -255,5 +290,6 @@ public class Main_login extends JPanel {
 			}
 		});
 	}
+	
 
 }
