@@ -32,6 +32,7 @@ import movie_server.TicketBox_VO;
 import pay.Pay;
 import pay.PointCharge;
 import pay.Reservation_completed;
+//import snackbar.Menu;
 import ticket.MobileTicket;
 import ticket.TicketList;
 import ticketbox.Ticket_before_pay;
@@ -69,6 +70,7 @@ public class Sign_in extends JFrame implements Runnable {
 	public Ticket_office_main to_main;
 	public Ticket_seat_map ts_map;
 	public Ticket_seat t_seat;
+	// public Menu snack;
 
 	public Sign_in() {
 		super("4딸라-필름");
@@ -126,9 +128,6 @@ public class Sign_in extends JFrame implements Runnable {
 		signin_login_bt.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		contentPane.add(signin_login_bt);
 
-		// 접속
-		connected();
-
 		main_login = new Main_login(this);
 		sign_up = new Sign_up(this);
 		// cvo = new CustomerVO(this);
@@ -154,18 +153,14 @@ public class Sign_in extends JFrame implements Runnable {
 		pg.add(to_main, "to_main");
 		pg.add(ts_map, "ts_map");
 		pg.add(t_seat, "t_seat");
-
-		// sign_up = new Sign_up(this);
-		// sign_up.setVisible(false);
-
-		// pg.add(contentPane, "sign_in");
+		// pg.add(snack, "snack");
 
 		setContentPane(pg);
-		//card.show(pg, "sign_in"); // 수정된 위치
 
-		// setContentPane(pg);
-		// card.show(pg, "sign_in");
+		// 접속
+		connected();
 
+		// Closing
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -183,13 +178,14 @@ public class Sign_in extends JFrame implements Runnable {
 			}
 		});
 
+		// 로그인 버튼
 		signin_login_bt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				login_go();
-				//card.show(pg, "main_login");
 			}
 		});
 
+		// 회원가입 버튼
 		signin_signup_bt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				card.show(pg, "sign_up");
@@ -197,6 +193,7 @@ public class Sign_in extends JFrame implements Runnable {
 			}
 		});
 
+		// 비밀번호 텍스트 필드
 		signin_pw_tf.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -214,9 +211,10 @@ public class Sign_in extends JFrame implements Runnable {
 			// 혜지-집: 183.96.151.249
 			// 혜지-학원: 192.168.0.41
 			// 지호-학원: 192.168.0.78
+			// 지호-집: 192.168.0.11
 			// 192.168.0.80 지혜
 			// 192.168.0.34
-			s = new Socket("192.168.31.168", 7780);
+			s = new Socket("192.168.0.11", 7780);
 			out = new ObjectOutputStream(s.getOutputStream());
 			in = new ObjectInputStream(s.getInputStream());
 
@@ -236,12 +234,45 @@ public class Sign_in extends JFrame implements Runnable {
 		} catch (Exception e) {
 		}
 	}
-//이건? 
-	// 초기값 메서드
+
+	// 초기값 메서드(로그인 실패 시 id/pw 텍스트 필드 비우고 Focus)
 	private void init() {
 		signin_id_tf.setText("");
 		signin_pw_tf.setText("");
 		signin_id_tf.requestFocus();
+	}
+
+	// 로그인 메서드
+	public void login_go() {
+		if (signin_id_tf.getText().trim().length() > 0 && signin_pw_tf.getText().trim().length() > 0) {
+
+			try {
+				CustomerVO c_vo = new CustomerVO();
+				Protocol p = new Protocol();
+
+				// 콘솔 확인용
+				System.out.println("아이디:" + signin_id_tf.getText());
+				System.out.println("비번:" + signin_pw_tf.getText());
+
+				// 1. CustomerVo에 입력한 아이디와 비번 세팅
+				c_vo.setCust_id(signin_id_tf.getText());
+				c_vo.setCust_password(signin_pw_tf.getText());
+
+				// 2. id/pw가 담긴 CustomerVO를 Protocol의 c_vo에 세팅
+				p.setC_vo(c_vo);
+
+				// 3. cmd 501이라고 라벨를 붙임.
+				p.setCmd(501);
+
+				out.writeObject(p);
+				out.flush();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		} else {
+			JOptionPane.showMessageDialog(getParent(), "아이디 / 비밀번호를 입력해주세요.");
+			System.out.println("입력하지않았을때 뜬다.");
+		}
 	}
 
 	@Override
@@ -254,7 +285,12 @@ public class Sign_in extends JFrame implements Runnable {
 					switch (p.getCmd()) {
 					case 0: // 종료
 						break esc;
-
+					case 104:
+//						System.out.println("sign_in의 104");
+//						List<MobileTicket_VO> ticketList = p.getP_list();
+//						System.out.println(ticketList);
+//						t_list.showTicketList(ticketList);
+						break;
 					case 301:
 						List<TicketBox_VO> movieList = p.getT_list();
 						System.out.println(movieList);
@@ -273,34 +309,33 @@ public class Sign_in extends JFrame implements Runnable {
 					case 501: // 로그인
 						// 지호
 						System.out.println("Sign_in의 501");
-						
-						if(p.getC_vo() != null) {
-							if(p.getC_vo().getAdmin_yn().equals("0")) {
+
+						if (p.getC_vo() != null) {
+							if (p.getC_vo().getAdmin_yn().equals("0")) {
 								// 로그인 성공
 								// 로그인 테스트용으로 전화번호 가져와봄.
 								String name = p.getC_vo().getCust_name();
 								System.out.println(name + " 님 로그인 성공");
-								
+
 								JOptionPane.showMessageDialog(getParent(), name + " 님 반갑습니다.");
-								
-								//로그인 성공을 해서 확인버튼을 누르면 main_login으로 이동해야 함.
-								card.show(pg, "main_login"); //지금 화면이 안뜸....
+
+								// 로그인 성공을 해서 확인버튼을 누르면 main_login으로 이동
+								card.show(pg, "main_login");
+								System.out.println("메인창 화면 전환 성공");
 							} else {
 								JOptionPane.showMessageDialog(getParent(), "관리자 로그인 성공");
-								//card.show(pg, ""); // 관리자 페이지로 이동
-								
+								// card.show(pg, ""); // 관리자 페이지로 이동
+								// 관리자팀은 먼저 카드선언하는위에 관리자 화면단 선언해주고 여기에 써주세요.
+
 							}
 						} else {
 							// 로그인 실패
 							JOptionPane.showMessageDialog(getParent(), "가입 정보 없음");
-							card.show(pg, "sign_in");
-							init();//텍스트필드 초기화
+							// card.show(pg, "sign_in");
+							// 로그인 실패해도, 이 카드 안보여줘도 다시 원래 화면으로 돌아가기
+							// 때문에 이건 주석처리함.
+							init();// 텍스트필드 초기화
 						}
-											
-//						System.out.println("cp클라이언트 일하고 여기로 왔니?");
-//						List<CustomerVO> login = p.getC_list();
-//						System.out.println("result 값있니?");
-//						LogIn(login, p.getResult());
 						break;
 
 					case 502: // 회원가입
@@ -312,63 +347,6 @@ public class Sign_in extends JFrame implements Runnable {
 			}
 		}
 		closed();
-	}
-
-	public void LogIn(List<CustomerVO> login, int result) {
-		
-		System.out.println(login);  //왜 널값?
-		if (result == 1) {
-			JOptionPane.showMessageDialog(getParent(), "로그인 성공");
-			System.out.println("login메서드도착.");
-			c_id = cvo.getCust_id();
-			c_pw = cvo.getCust_password();
-			// 여기에 저장해서어디에 쓸거지?
-
-			card.show(pg, "main_login");
-
-		} else if (result == 0) {
-			System.out.println("메서드로 와서 알림창 뜬다.");
-			JOptionPane.showMessageDialog(getParent(), "가입 정보 없음");
-			init();
-		}
-
-	}
-
-	public void login_go() {
-		if (signin_id_tf.getText().trim().length() > 0 && signin_pw_tf.getText().trim().length() > 0) {
-			// 필드값이 두개다 이상이라면
-			
-			try {
-//				Protocol p = new Protocol();
-//				p.setCmd(501);
-//				out.writeObject(p);
-//				out.flush();
-				
-				CustomerVO c_vo = new CustomerVO();
-				Protocol p = new Protocol();
-				
-				System.out.println("아이디:" + signin_id_tf.getText());
-				System.out.println("비번:" + signin_pw_tf.getText());
-				
-				//1. CustomerVo에 입력한 아이디와 비번 세팅
-				c_vo.setCust_id(signin_id_tf.getText());
-				c_vo.setCust_password(signin_pw_tf.getText());
-				
-				//2. id/pw가 담긴 CustomerVO를 Protocol의 c_vo에 세팅
-				p.setC_vo(c_vo);
-				
-				//3. cmd 501이라고 라벨를 붙임.
-				p.setCmd(501);
-				
-				out.writeObject(p);
-				out.flush();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		} else {
-			JOptionPane.showMessageDialog(getParent(), "아이디 / 비밀번호를 입력해주세요.");
-			System.out.println("입력하지않았을때 뜬다.");
-		}
 	}
 
 	public static void main(String[] args) {

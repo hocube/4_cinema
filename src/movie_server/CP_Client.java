@@ -71,7 +71,6 @@ public class CP_Client extends Thread{
 //                    	out.writeObject(p);
 //                    	out.flush();
 //                    	break;
-                    	
                     case 301 :   //영화목록가져오라는 요청을 받아, 여기서 받아서 DAO로 보내자.            
                         List<TicketBox_VO> t_list = DAO.getMovie_name(); // 영화 목록을 DB에서 가져옴                  
                          p.setT_list(t_list);
@@ -80,7 +79,6 @@ public class CP_Client extends Thread{
                          out.flush();
 
                          break;
-
                      case 302 :
                         //영화 시간 갖고오는 cmd 
                         System.out.println("cmd302 왔음");
@@ -93,7 +91,6 @@ public class CP_Client extends Thread{
                         break;
                      case 303:
                      	break;
-						
 					case 501:	// 로그인
 						//지호
 						System.out.println("cp_client의 로그인 501에 도착!");

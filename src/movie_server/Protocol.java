@@ -37,6 +37,7 @@ public class Protocol implements Serializable{
 	List<TicketBox_VO> t_list;
 	TicketBox_VO t_vo;
 	List<Seat_VO> s_list;
+	
 	public int getCmd() {
 		return cmd;
 	}
