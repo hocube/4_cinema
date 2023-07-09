@@ -1,6 +1,7 @@
 package c_loginout;
 
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,22 +10,27 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
-import movie_server.Protocol;
+import pay.PointChargeDialog;
 
-public class Main_login extends JPanel{
+public class Main_login extends JPanel {
+	
+    // Main_login 패널에 추가될 버튼 및 컴포넌트들 선언
+    private JButton main_point_charge_bt;
+    
 	Sign_in sign_in;
-	//Movie_chart_view1 v1 = new Movie_chart_view1();	//두개 안씀
-	//Movie_chart_view2 v2 = new Movie_chart_view2();
-	
-	//CardLayout card = new CardLayout();
-	
+	// Movie_chart_view1 v1 = new Movie_chart_view1(); //두개 안씀
+	// Movie_chart_view2 v2 = new Movie_chart_view2();
+
+	// CardLayout card = new CardLayout();
+
 	public Main_login(Sign_in signin) {
 		this.sign_in = signin;
-		
+
 		this.setLayout(null);
-		
-		// 로고이미지 // 로고이미지 
+
+		// 로고이미지 
 		JButton logo_bt = new JButton();
 		logo_bt.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 		logo_bt.setBounds(99, 126, 575, 131);
@@ -32,7 +38,7 @@ public class Main_login extends JPanel{
 		this.add(logo_bt);
 
 		// 하단에 액션리스너
-		JButton mobile_ticket_bt = new JButton("모바일 티켓");
+		JButton mobile_ticket_bt = new JButton("티켓 리스트");
 		mobile_ticket_bt.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 		mobile_ticket_bt.setBounds(35, 35, 122, 49);
 		this.add(mobile_ticket_bt);
@@ -67,10 +73,11 @@ public class Main_login extends JPanel{
 		this.add(login_point_label);
 
 		// 하단에 액션리스너
-		JButton main_point_charge_bt = new JButton("포인트 충전");
-		main_point_charge_bt.setFont(new Font("맑은 고딕", Font.BOLD, 10));
-		main_point_charge_bt.setBounds(563, 35, 89, 25);
-		this.add(main_point_charge_bt);
+        // 포인트 충전 버튼 생성 및 추가
+        main_point_charge_bt = new JButton("포인트 충전");
+        main_point_charge_bt.setFont(new Font("맑은 고딕", Font.BOLD, 10));
+        main_point_charge_bt.setBounds(563, 35, 89, 25);
+        add(main_point_charge_bt);
 
 		// 이건 제목으로밖에 안쓰기 때문에 생성만.
 		JLabel lblNewLabel = new JLabel("절찬 상영중");
@@ -147,17 +154,8 @@ public class Main_login extends JPanel{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
 					signin.card.show(signin.pg, "t_list");
 					System.out.println("모바일티켓버튼 눌러 티켓리스트 전환 성공");
-					Protocol p = new Protocol();
-					p.setCmd(104);
-					signin.out.writeObject(p);
-					signin.out.flush();
-				} catch (Exception e2) {
-					
-				}
-				
 			}
 		});
 
@@ -181,14 +179,12 @@ public class Main_login extends JPanel{
 		
 
 		// 4. 포인트충전
-		main_point_charge_bt.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				signin.card.show(signin.pg, "pointcharge");
-				System.out.println("포인트충전 버튼 눌러 포인트충전 전환 성공");
-			}
-		});
+        main_point_charge_bt.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                PointChargeDialog dialog = new PointChargeDialog((Frame) SwingUtilities.getWindowAncestor(Main_login.this));
+                dialog.setVisible(true);
+            }
+        });
 
 		// 5. 각 포스터 누르면 매표소로 각 이름 체크되서가져가기.
 		btnNewButton.addActionListener(new ActionListener() {
@@ -198,10 +194,6 @@ public class Main_login extends JPanel{
 				// 여기엔 제일 밑에 하나의 메서드를 작성해서 동일하게 할수있도록 하자.
 				// 각 다른 포스터를 클릭해도, get으로 가져와서 sql문으로 확인할거니.
 				// 동일할거라 생각된다. cmd도 찾아달라는 동일명령어일테니...?
-				
-				
-				
-				
 
 			}
 		});

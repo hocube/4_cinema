@@ -20,12 +20,17 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import c_loginout.Sign_in;
+import movie_server.DAO;
+import movie_server.MobileTicket_VO;
+import movie_server.Protocol;
 
+// 원래꺼
 public class TicketList extends JPanel{
 	Sign_in sign_in;
 	JPanel Panel;
 	JTable ticketTable;
-	JButton ticketButton, cancelButton;
+	JButton ticketButton, cancelButton, backButton;
+	String currentUserId;
 	
 	public TicketList(Sign_in signin) {
 		this.sign_in = signin;
@@ -61,142 +66,156 @@ public class TicketList extends JPanel{
 		JPanel ButtonPanel = new JPanel();
 		ticketButton = new JButton("티켓 확인");
 		cancelButton = new JButton("예매 취소");
+		backButton = new JButton("뒤로가기");
 		ButtonPanel.add(ticketButton);
 		ButtonPanel.add(cancelButton);
+		ButtonPanel.add(backButton);
 		Panel.add(ButtonPanel, BorderLayout.SOUTH);
 
 		add(Panel);
 
-		// setSize(350, 600);
-		setSize(600, 400);
-		//setLocationRelativeTo(null);
 		setVisible(true);
-		//setDefaultCloseOperation(EXIT_ON_CLOSE);
-		//setResizable(false); // 크기 조절 비활성화
-
-		// 화면 처음에 티켓 리스트 보여줌.
-		//showTicketList();
 		
-//		// "티켓 확인" 버튼
-//		ticketButton.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				// 현재 선택된 행의 정보 가져오기
-//				int selectedRow = ticketTable.getSelectedRow();
-//
-//				// 선택 된 행의 정보 가져오기
-//				if (selectedRow != -1) {
-//					Ticket_DAO ticketDAO = new Ticket_DAO();
-//					Ticket_VO ticket = ticketDAO.getTicketByRow(ticketTable, selectedRow);
-//
-//					// 해당 모바일 티켓 화면에 띄우기
-//					new MobileTicket(signin); // TicketList 객체 전달
-//				}
-//			}
-//		});
-//
-//
-//		// 예매 취소 버튼 -> 선택한 행의 티켓 삭제 후 리스트 업데이트
-////		cancelButton.addActionListener(new ActionListener() {
-////
-////			@Override
-////			public void actionPerformed(ActionEvent e) {
-////				int selectedRow = ticketTable.getSelectedRow();
-////
-////				if (selectedRow != -1) {
-////					int result = JOptionPane.showConfirmDialog(null, "예매를 취소하시겠습니까?", "예매 취소",
-////							JOptionPane.YES_NO_OPTION);
-////
-////					// "예" 선택 시
-////					if (result == JOptionPane.YES_OPTION) {
-////						// 선택된 행의 티켓 번호 가져오기.
-////						int ticket_num = Integer.parseInt(ticketTable.getValueAt(selectedRow, 0).toString());
-////						Ticket_DAO ticket_dao = new Ticket_DAO();
-////						int success = ticket_dao.cancelTicket(ticket_num); // 선택된 티켓 번호로 예매 취소
-////
-////						// 예매 취소 성공 시
-////						if (success == 1) {
-////							JOptionPane.showMessageDialog(null, "예매가 취소되었습니다.");
-////							// 리스트 업데이트
-////							showTicketList();
-////						} else {
-////							JOptionPane.showMessageDialog(null, "예매 취소에 실패했습니다.");
-////						}
-////					}
-////				}
-////			}
-////		});
-//	}
-//
-//	// 티켓 리스트 보여주는 메서드
-//	public void showTicketList() {
-//		System.out.println("===showTicketList 실행===");
-//		
-//		// 현재 로그인 한 회원의 아이디 가져오기
-//		String currentUserId = Session.getCurrentUserId();
-//		System.out.println("===[티켓리스트]로그인 한 회원 누구인지 실행===");
-//
-//		// 티켓 확인을 위해 DAO 호출 프로토콜 없이
-////		Ticket_DAO ticketDAO = new Ticket_DAO();
-////		ArrayList<Ticket_VO> ticketList = ticketDAO.getTicketList(currentUserId);
-//		
-//		// 빈 ArrayList를 생성하고 ticketList 변수에 할당
-//		// 티켓 리스트를 담을 ArrayList를 생성
-//		Protocol p = new Protocol();
-//	    p.setCmd(104);
-//	    p.setList(new ArrayList<>()); // 빈 ArrayList 설정 (실제 티켓 리스트는 서버에서 받아옴)
-//	    System.out.println("여기까지는 되는거지?");
-//	    //p.getPay_vo().setCust_id(currentUserId); // Pay_VO 사용하지 않음
-//        
-//		// 테이블에 데이터 추가
-//		//updateTable(ticketList);
-//	}
-//
-//	// JTable에 데이터 추가하는 메서드
-//	public void updateTable(ArrayList<Ticket_VO> tickets) {
-//		DefaultTableModel model = (DefaultTableModel) ticketTable.getModel();
-//		model.setRowCount(0); // 기존 테이블 데이터를 초기화
-//
-//		for (Ticket_VO ticket : tickets) {
-//			Object[] rowData = { ticket.getTicket_num(), ticket.getMovie_name(), ticket.getMovie_date(),
-//					ticket.getStart_time(), ticket.getTheater_id(), ticket.getTheater_seat() };
-//			model.addRow(rowData);
-//		}
-//	}
-//
-//	// 취소된 티켓을 제외한 티켓 목록을 가져오는 메서드
-//	public List<Ticket_VO> getFilteredTickets() {
-//		List<Ticket_VO> filteredTickets = new ArrayList<>();
-//
-//		// DAO호출
-//		Ticket_DAO ticketDAO = new Ticket_DAO();
-//		String currentUserId = Session.getCurrentUserId();
-//		ArrayList<Ticket_VO> ticketList = ticketDAO.getTicketList(currentUserId);
-//
-//		// 취소된 티켓을 제외한 티켓 목록 필터링
-//		// 반환 값이 0인 경우에 해당 티켓은 취소되지 않은 것
-//		for (Ticket_VO ticket : ticketList) {
-//			if (ticket.getTicket_canceled() == 0) {
-//				filteredTickets.add(ticket);
-//			}
-//		}
-//		return filteredTickets;
-//	}
-//
-//	// 티켓 목록 업데이트 메서드
-//	// 티켓 취소 후 다시 돌아왔을 때 취소된 티켓을 제외한 목록 보여주기 위해
-//	public void refreshTicketList() {
-//		List<Ticket_VO> filteredTickets = getFilteredTickets();
-//
-//		DefaultTableModel tableModel = (DefaultTableModel) ticketTable.getModel();
-//		tableModel.setRowCount(0); // 기존 데이터 삭제
-//
-//		for (Ticket_VO ticket : filteredTickets) {
-//			Object[] rowData = { ticket.getTicket_num(), ticket.getMovie_name(), ticket.getMovie_date(),
-//					ticket.getStart_time(), ticket.getTheater_id(), ticket.getTheater_seat() };
-//			tableModel.addRow(rowData);
-//		}
-//	}
+		
+		
+
+		// "티켓 확인" 버튼
+		ticketButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+
+				// 현재 선택된 행의 정보 가져오기
+				int selectedRow = ticketTable.getSelectedRow();
+
+				// 선택 된 행의 정보 가져오기
+				if (selectedRow != -1) {
+					//DAO ticketDAO = new DAO();
+					//List<MobileTicket_VO> ticket = DAO.getTicketByRow();
+
+					// 해당 모바일 티켓 화면에 띄우기
+					new MobileTicket(signin); // TicketList 객체 전달
+				
+				}
+			}
+		});
+
+
+		// 예매 취소 버튼 -> 선택한 행의 티켓 삭제 후 리스트 업데이트
+		cancelButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = ticketTable.getSelectedRow();
+
+				if (selectedRow != -1) {
+					int result = JOptionPane.showConfirmDialog(null, "예매를 취소하시겠습니까?", "예매 취소",
+							JOptionPane.YES_NO_OPTION);
+
+					// "예" 선택 시
+					if (result == JOptionPane.YES_OPTION) {
+						// 선택된 행의 티켓 번호 가져오기.
+						int ticket_num = Integer.parseInt(ticketTable.getValueAt(selectedRow, 0).toString());
+						DAO ticket_dao = new DAO();
+						int success = ticket_dao.cancelTicket(ticket_num); // 선택된 티켓 번호로 예매 취소
+
+						// 예매 취소 성공 시
+						if (success == 1) {
+							JOptionPane.showMessageDialog(null, "예매가 취소되었습니다.");
+							// 리스트 업데이트
+							//showTicketList();
+						} else {
+							JOptionPane.showMessageDialog(null, "예매 취소에 실패했습니다.");
+						}
+					}
+				}
+			}
+		});
+		
+		backButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				signin.card.show(signin.pg, "main_login");
+			}
+		});
 	}
-}
+	
+	
+	 public TicketList(String currentUserId) {
+	        this.currentUserId = currentUserId;
+	        
+	        // 이하 코드 생략
+	    }
+
+	// 티켓 리스트 보여주는 메서드
+	public void showTicketList(List<MobileTicket_VO> ticket) {
+		System.out.println("티켓리스트 갖고오는 메서드 실행");
+		
+		// 현재 로그인 한 회원의 아이디 가져오기
+		List<MobileTicket_VO> ticketList = DAO.getTicketList();
+		//System.out.println("===[티켓리스트]로그인 한 회원 누구인지 실행===");
+
+		// 티켓 확인을 위해 DAO 호출 프로토콜 없이
+		//Ticket_DAO ticketDAO = new Ticket_DAO();
+		//ArrayList<Ticket_VO> ticketList = ticketDAO.getTicketList(currentUserId);
+		
+		// 빈 ArrayList를 생성하고 ticketList 변수에 할당
+		// 티켓 리스트를 담을 ArrayList를 생성
+		Protocol p = new Protocol();
+	    p.setCmd(104);
+	    //p.setP_list(p); // 빈 ArrayList 설정 (실제 티켓 리스트는 서버에서 받아옴)
+	    System.out.println("티켓리스트 담아졌나?");
+	    //p.getPay_vo().setCust_id(currentUserId); // Pay_VO 사용하지 않음
+        
+		// 테이블에 데이터 추가
+		updateTable(ticketList);
+	}
+
+	// JTable에 데이터 추가하는 메서드
+	public void updateTable(List<MobileTicket_VO> tickets) {
+		DefaultTableModel model = (DefaultTableModel) ticketTable.getModel();
+		model.setRowCount(0); // 기존 테이블 데이터를 초기화
+		System.out.println("티켓받고 업데이트까지되나?");
+		for (MobileTicket_VO ticket : tickets) {
+			Object[] rowData = { ticket.getTicket_num(), ticket.getMovie_name(), ticket.getMovie_date(),
+					ticket.getStart_time(), ticket.getTheater_id(), ticket.getTheater_seat() };
+			model.addRow(rowData);
+		}
+	}
+
+	// 취소된 티켓을 제외한 티켓 목록을 가져오는 메서드
+	/*public List<MobileTicket_VO> getFilteredTickets() {
+		List<MobileTicket_VO> filteredTickets = new ArrayList<>();
+
+		// DAO호출
+		DAO ticketDAO = new DAO();
+		//String currentUserId = Session.getCurrentUserId();
+		ArrayList<MobileTicket_VO> ticketList = ticketDAO.getTicketList(currentUserId);
+
+		// 취소된 티켓을 제외한 티켓 목록 필터링
+		// 반환 값이 0인 경우에 해당 티켓은 취소되지 않은 것
+		for (MobileTicket_VO ticket : ticketList) {
+			if (ticket.getTicket_canceled() == 0) {
+				filteredTickets.add(ticket);
+			}
+		}
+		return filteredTickets;
+	}*/
+
+	// 티켓 목록 업데이트 메서드
+	// 티켓 취소 후 다시 돌아왔을 때 취소된 티켓을 제외한 목록 보여주기 위해
+	/*public void refreshTicketList() {
+		List<MobileTicket_VO> filteredTickets = getFilteredTickets();
+
+		DefaultTableModel tableModel = (DefaultTableModel) ticketTable.getModel();
+		tableModel.setRowCount(0); // 기존 데이터 삭제
+
+		for (MobileTicket_VO ticket : filteredTickets) {
+			Object[] rowData = { ticket.getTicket_num(), ticket.getMovie_name(), ticket.getMovie_date(),
+					ticket.getStart_time(), ticket.getTheater_id(), ticket.getTheater_seat() };
+			tableModel.addRow(rowData);
+		}
+	}*/
+	}

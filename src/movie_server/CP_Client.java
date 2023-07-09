@@ -63,14 +63,17 @@ public class CP_Client extends Thread{
                     case 104: // 현재 로그인 회원의 티켓 리스트 출력
                     	System.out.println("===CP_Client의 case 104===");
                     	
-//                    	currentUserId = Session.getCurrentUserId();
-//                    	DAO dao = new DAO();
-//                		ArrayList<MobileTicket_VO> m_list = DAO.getTicketList(currentUserId);
-//                		System.out.println("티켓 리스트 가져오기 성공");
-//                		p.setList(ticketList);
-//                    	out.writeObject(p);
-//                    	out.flush();
-//                    	break;
+                    	
+                    	List<MobileTicket_VO> m_list = DAO.getTicketList();
+                    	//DAO dao = new DAO();
+                		//ArrayList<MobileTicket_VO> m_list = DAO.getTicketList(currentUserId);
+                		System.out.println("티켓 리스트 가져오기 성공");
+                		p.setP_list(m_list);
+                    	out.writeObject(p);
+                    	out.flush();
+                    	System.out.println("보냈니?");
+                    	break;
+                    	
                     case 301 :   //영화목록가져오라는 요청을 받아, 여기서 받아서 DAO로 보내자.            
                         List<TicketBox_VO> t_list = DAO.getMovie_name(); // 영화 목록을 DB에서 가져옴                  
                          p.setT_list(t_list);
@@ -79,6 +82,7 @@ public class CP_Client extends Thread{
                          out.flush();
 
                          break;
+
                      case 302 :
                         //영화 시간 갖고오는 cmd 
                         System.out.println("cmd302 왔음");
@@ -89,8 +93,10 @@ public class CP_Client extends Thread{
                         out.writeObject(p);
                         out.flush();
                         break;
+                        
                      case 303:
                      	break;
+						
 					case 501:	// 로그인
 						//지호
 						System.out.println("cp_client의 로그인 501에 도착!");
@@ -102,18 +108,16 @@ public class CP_Client extends Thread{
 						p.setC_vo(DAO.getLogin(c_vo));
 						
 						if(DAO.getLogin(c_vo) != null) {
-							// 로그인 성공
+							// 로그인 성공시에만 Login_info에 회원정보 삽입
 							// 로그인 테스트용으로 전화번호 가져와봄.
 							String phone = p.getC_vo().getCust_phone();
 							System.out.println("CP_Client :" + phone);
 							
 							// 로그인한 회원 정보 Login_info에 넣기
 							DAO.loginInfoInsert(p.getC_vo());
-		
-						} else {
-							// 로그인 실패
-							System.out.println("로그인 실패");
 						}
+						//위의 if문은 주석처리해도 로그인은 성공함.
+						
 			
 												
 //						List<CustomerVO> loginchk = DAO.getIdChk(getName());

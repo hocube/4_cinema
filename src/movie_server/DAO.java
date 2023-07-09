@@ -69,22 +69,22 @@ public class DAO {
 		List<CustomerVO> vo = getSession().selectOne("idchk", loginchk);
 		return vo;
 	}
-	
-	// 로그인한 회원의 회원정보 가져오기 
+
+	// 로그인한 회원의 회원정보 가져오기
 	// 지호
 	public static CustomerVO getLogin(CustomerVO c_vo) {
 		System.out.println("DAO getLogin");
 		CustomerVO result = getSession().selectOne("login", c_vo);
 		return result;
 	}
-	
+
 	// 로그인한 회원 정보 Login_info에 넣기
 	// 지호
 	public static int loginInfoInsert(CustomerVO c_vo) {
 		System.out.println("DAO loginInfoInsert : " + c_vo.getCust_name());
-	    int result = getSession().insert("loginInfoInsert", c_vo);
-	    ss.commit();
-	    return result;
+		int result = getSession().insert("loginInfoInsert", c_vo);
+		ss.commit();
+		return result;
 	}
 
 //	public static List<CustomerVO> getLogin(List<CustomerVO> loginchk) {
@@ -92,7 +92,6 @@ public class DAO {
 //		return vo;
 //	}
 
-	
 	/*
 	 * public static List<Loginout_VO> getList(){ List<Loginout_VO> list = null; //
 	 * selectList() : 결과가 하나이상일때 // selectOne() : 반드시 결과가 하나일때 // 파라미터가 있는 메서드와
@@ -140,14 +139,15 @@ public class DAO {
 		}
 	}
 
-//로그인한 회원의 예매 내역 리스트
-	public ArrayList<MobileTicket_VO> getTicketList(String cust_id) {
-		List<MobileTicket_VO> ticketList = getSession().selectList("getTicketList", cust_id);
-		return (ArrayList<MobileTicket_VO>) ticketList;
+	//로그인한 회원의 예매 내역 리스트
+	public static List<MobileTicket_VO> getTicketList() {
+		System.out.println("104의 DAO");
+		List<MobileTicket_VO> ticketList = getSession().selectList("getTicketList");
+		return ticketList;
 	}
 
 	// 리스트에서 선택된 티켓 정보 가져오기
-	public MobileTicket_VO getTicketByRow(JTable table, int row) {
+	/* public List<MobileTicket_VO> getTicketByRow() {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		String ticketNum = model.getValueAt(row, 0).toString();
 		String movieName = model.getValueAt(row, 1).toString();
@@ -163,51 +163,47 @@ public class DAO {
 		ticket.setStart_time(startTime);
 		ticket.setTheater_id(theaterId);
 		ticket.setTheater_seat(theaterSeat);
-
-		return ticket;
-	}
+		
+		 List<MobileTicket_VO> vo = getSession().selectList("movieinsert");
+		return vo;
+	}  */
 
 	// 예매 취소하기
 	public int cancelTicket(int ticket_num) {
 		int result = getSession().delete("cancelTicket", ticket_num);
 		return result;
 	}
-	
-	//지혜
-			// mapper 로가서 prn_time sql문 실행하고 값을 가져오자.
-			public static List<TicketBox_VO> getStart_time() {
-				System.out.println("DAO와서 sql문11 하고올게요");
-				List<TicketBox_VO> stimeList = getSession().selectList("movie.stimeList");
 
-				return stimeList;
+	// 지혜
+	// mapper 로가서 prn_time sql문 실행하고 값을 가져오자.
+	public static List<TicketBox_VO> getStart_time() {
+		System.out.println("DAO와서 sql문11 하고올게요");
+		List<TicketBox_VO> stimeList = getSession().selectList("movie.stimeList");
 
-			}
+		return stimeList;
 
-			public static List<TicketBox_VO> getEnd_time() {
-				System.out.println("DAO와서 sql문22 하고올게요");
-				List<TicketBox_VO> etimeList = getSession().selectList("movie.etimeList");
+	}
 
-				return etimeList;
+	public static List<TicketBox_VO> getEnd_time() {
+		System.out.println("DAO와서 sql문22 하고올게요");
+		List<TicketBox_VO> etimeList = getSession().selectList("movie.etimeList");
 
-			}
-			public static List<TicketBox_VO> getMovieTimes(String movieTitle) {
-				List<TicketBox_VO> vo = getSession().selectList("movie.getMovieTimes", movieTitle);
-				
-				return vo;
-			}
+		return etimeList;
 
-			public static List<TicketBox_VO> getMovie_name() {
-				System.out.println("DAO와서 sql문 하고올게요");
+	}
 
-				List<TicketBox_VO> movieList = getSession().selectList("movie.movieList");
-				System.out.println("mapper다녀왔어요" + movieList);
-				return movieList;
-			}
+	public static List<TicketBox_VO> getMovieTimes(String movieTitle) {
+		List<TicketBox_VO> vo = getSession().selectList("movie.getMovieTimes", movieTitle);
 
-			
-			
+		return vo;
+	}
+
+	public static List<TicketBox_VO> getMovie_name() {
+		System.out.println("DAO와서 sql문 하고올게요");
+
+		List<TicketBox_VO> movieList = getSession().selectList("movie.movieList");
+		System.out.println("mapper다녀왔어요" + movieList);
+		return movieList;
+	}
+
 }
-
-			
-
-	

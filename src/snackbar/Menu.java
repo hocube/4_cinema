@@ -1,46 +1,46 @@
-//package snackbar;
-//
-//import java.awt.BorderLayout;
-//import java.awt.Color;
-//import java.awt.Dimension;
-//import java.awt.FlowLayout;
-//import java.awt.Font;
-//import java.awt.GridLayout;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
-//
-//import javax.swing.ImageIcon;
-//import javax.swing.JButton;
-//import javax.swing.JFrame;
-//import javax.swing.JLabel;
-//import javax.swing.JPanel;
-//import javax.swing.JScrollPane;
-//import javax.swing.JTextArea;
-//import javax.swing.SwingConstants;
-//
-//import c_loginout.Sign_in;
-//import movie_server.Point_VO;
-//
-//
-//public class Menu extends JPanel {
-//	
-//	Sign_in sign_in;
-//	
-//	JPanel jp1, jp11, jp12, jp2, jp21,jp211,jp212,jp22,jp23, jp3, s_menujp, s_jp1,s_jp2,s_jp3, s_jp;
-//	
-//	JButton jb1, jb2, jb21,jb22,jb23,jb4,jb5,jb6,jb7,jb8,jb9,
-//	jb10,jb11,jb12,jb13,jb14,jb15,jb16,jb17,jb18, jb30, s_jb1,s_jb2,s_jb3;
-//	
-//	JLabel jlb1,jlb2, jlb3, jlb4, s_jlb1,s_jlb2,s_jlb3;
-//	
-//	JScrollPane jsp,jsp1;
-//	JTextArea jta;
-//	int su= 0;
-//		public Menu(Sign_in signin) {
-//			this.sign_in = signin;
-//			
-//			
-//	// 패널 만들기
+package snackbar;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+
+import c_loginout.Sign_in;
+import pay.PointCharge;
+
+
+public class Menu extends JPanel {
+	
+	Sign_in sign_in;
+
+	JPanel jp1, jp11, jp12, jp2, jp21,jp211,jp212,jp22,jp23, jp3, s_menujp, s_jp1,s_jp2,s_jp3, s_jp;
+	
+	JButton jb1, jb2, jb21,jb22,jb23,jb4,jb5,jb6,jb7,jb8,jb9,
+	jb10,jb11,jb12,jb13,jb14,jb15,jb16,jb17,jb18, jb30, s_jb1,s_jb2,s_jb3;
+	
+	JLabel jlb1,jlb2, jlb3, jlb4, s_jlb1,s_jlb2,s_jlb3;
+	
+	JScrollPane jsp,jsp1;
+	JTextArea jta;
+	int su=0;
+	
+		public Menu(Sign_in signin) {
+			this.sign_in = signin;
+			
+			
+//	패널 만들기
 //	jp1 = new JPanel();
 //	jp1.setPreferredSize(new Dimension(800, 160));
 //	jp11 = new JPanel();
@@ -111,8 +111,8 @@
 //	
 //	
 //	//라벨 만들기
-//	Point_VO vo = new Point_VO();
-//	jlb1 = new JLabel(vo.getCUST_ID()+"님 잔여포인트"+vo.getREMAINING_POINT());
+//	//Point_VO vo = new Point_VO();
+//	//jlb1 = new JLabel(vo.getCUST_ID()+"님 잔여포인트"+vo.getREMAINING_POINT());
 //	jlb2 = new JLabel("4딸_라 매점");
 //	jlb2.setFont(new Font("돋움",	 Font.BOLD, 40));
 //	jlb3 = new JLabel("장바구니");
@@ -225,7 +225,7 @@
 //	setVisible(true);
 //
 //	
-//	jb2.addActionListener(new ActionListener() {
+//	/*jb2.addActionListener(new ActionListener() {
 //		
 //		@Override
 //		public void actionPerformed(ActionEvent e) {
@@ -233,7 +233,7 @@
 //			
 //			
 //		}
-//	});
+//	});*/
 //	jb4.addActionListener(new ActionListener() {
 //		
 //		@Override
@@ -277,5 +277,5 @@
 //		
 //	});
 //	
-//	}
-//}
+		}
+	}
