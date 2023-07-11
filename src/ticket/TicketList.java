@@ -75,9 +75,6 @@ public class TicketList extends JPanel{
 		Panel.add(ButtonPanel, BorderLayout.SOUTH);
 
 		add(Panel);
-		
-		
-		
 
 		// "티켓 확인" 버튼
 		ticketButton.addActionListener(new ActionListener() {
@@ -145,45 +142,20 @@ public class TicketList extends JPanel{
 	
 	 public TicketList(String currentUserId) {
 	        this.currentUserId = currentUserId;
-	        
-	        // 이하 코드 생략
+
 	    }
 
-	// 티켓 리스트 보여주는 메서드
-	public void showTicketList(List<MobileTicket_VO> ticket) {
-		System.out.println("티켓리스트 갖고오는 메서드 실행");
-		
-		// 현재 로그인 한 회원의 아이디 가져오기
-		List<MobileTicket_VO> ticketList = DAO.getTicketList();
-		//System.out.println("===[티켓리스트]로그인 한 회원 누구인지 실행===");
 
-		// 티켓 확인을 위해 DAO 호출 프로토콜 없이
-		//Ticket_DAO ticketDAO = new Ticket_DAO();
-		//ArrayList<Ticket_VO> ticketList = ticketDAO.getTicketList(currentUserId);
-		
-		// 빈 ArrayList를 생성하고 ticketList 변수에 할당
-		// 티켓 리스트를 담을 ArrayList를 생성
-		Protocol p = new Protocol();
-	    p.setCmd(104);
-	    //p.setP_list(p); // 빈 ArrayList 설정 (실제 티켓 리스트는 서버에서 받아옴)
-	    System.out.println("티켓리스트 담아졌나?");
-	    //p.getPay_vo().setCust_id(currentUserId); // Pay_VO 사용하지 않음
-        
-		// 테이블에 데이터 추가
-		updateTable(ticketList);
-	}
-
-	// JTable에 데이터 추가하는 메서드
-	public void updateTable(List<MobileTicket_VO> tickets) {
-		DefaultTableModel model = (DefaultTableModel) ticketTable.getModel();
-		model.setRowCount(0); // 기존 테이블 데이터를 초기화
-		System.out.println("티켓받고 업데이트까지되나?");
-		for (MobileTicket_VO ticket : tickets) {
-			Object[] rowData = { ticket.getTicket_num(), ticket.getMovie_name(), ticket.getMovie_date(),
-					ticket.getStart_time(), ticket.getTheater_id(), ticket.getTheater_seat() };
-			model.addRow(rowData);
+	// Table에 리스트 보여주는 메서드
+		public void updateTable(List<MobileTicket_VO> tickets) {
+			DefaultTableModel model = (DefaultTableModel) ticketTable.getModel();
+			model.setRowCount(0); // 기존 테이블 데이터를 초기화
+			for (MobileTicket_VO ticket : tickets) {
+				Object[] rowData = { ticket.getTicket_num(), ticket.getMovie_name(), ticket.getMovie_date(),
+						ticket.getStart_time(), ticket.getTheater_id(), ticket.getTheater_seat() };
+				model.addRow(rowData);
+			}
 		}
-	}
 
 	// 취소된 티켓을 제외한 티켓 목록을 가져오는 메서드
 	/*public List<MobileTicket_VO> getFilteredTickets() {

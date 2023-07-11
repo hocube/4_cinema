@@ -32,11 +32,14 @@ public class Protocol implements Serializable{
 	
 	Pay_VO p_vo;
 	MobileTicket_VO m_vo;
-	List<MobileTicket_VO> p_list;
+	List<MobileTicket_VO> m_list;
 	
 	List<TicketBox_VO> t_list;
 	TicketBox_VO t_vo;
 	List<Seat_VO> s_list;
+	
+	
+	
 	public int getCmd() {
 		return cmd;
 	}
@@ -79,11 +82,11 @@ public class Protocol implements Serializable{
 	public void setM_vo(MobileTicket_VO m_vo) {
 		this.m_vo = m_vo;
 	}
-	public List<MobileTicket_VO> getP_list() {
-		return p_list;
+	public List<MobileTicket_VO> getM_list() {
+		return m_list;
 	}
-	public void setP_list(List<MobileTicket_VO> p_list) {
-		this.p_list = p_list;
+	public void setM_list(List<MobileTicket_VO> m_list) {
+		this.m_list = m_list;
 	}
 	public List<TicketBox_VO> getT_list() {
 		return t_list;

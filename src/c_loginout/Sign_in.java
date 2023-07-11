@@ -33,7 +33,8 @@ import movie_server.TicketBox_VO;
 import pay.Pay;
 import pay.PointCharge;
 import pay.Reservation_completed;
-import snackbar.Menu;
+import snackbar.Snack;
+import snackbar.admin_panel;
 import ticket.MobileTicket;
 import ticket.TicketList;
 import ticketbox.Ticket_before_pay;
@@ -53,7 +54,9 @@ public class Sign_in extends JFrame implements Runnable {
 	private JLabel signin_logo_label, signin_id_label, signin_pw_label;
 
 	public String c_id, c_pw;
-
+	public int iddck = 2;
+	public int loginRes;
+	
 	public Socket s;
 	public ObjectOutputStream out;
 	public ObjectInputStream in;
@@ -71,13 +74,20 @@ public class Sign_in extends JFrame implements Runnable {
 	public Ticket_office_main to_main;
 	public Ticket_seat_map ts_map;
 	public Ticket_seat t_seat;
-	public Menu snack;
+	public snackbar.Snack snack;
+	public admin_panel admin;
 	
 	Protocol p; // 다른 화면에서 호출하기 위해 추가
 
 	public Sign_in() {
 		super("4딸라-필름");
 
+		
+		//이부분 추가 = 혜지
+		card = new CardLayout();
+		pg = new JPanel();
+		pg.setLayout(card);
+		
 		setResizable(false);
 		setBounds(100, 100, 800, 800);
 
@@ -128,8 +138,17 @@ public class Sign_in extends JFrame implements Runnable {
 		signin_login_bt.setContentAreaFilled(false);
 		signin_login_bt.setFont(new Font("Dialog", Font.BOLD, 20));
 		signin_login_bt.setBorderPainted(false);
+		signin_login_bt.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		contentPane.add(signin_login_bt);
 		setVisible(true);
+		
+		// [0710수정](139~144) 회원가입은 로그인 성공 후에 들어가는게 회원가입 부분만 따로 뺐습니다 -혜지
+				sign_up = new Sign_up(this);
+				setContentPane(pg);
+				
+				pg.add(contentPane, "sign_in");
+				pg.add(sign_up, "sign_up");
+				
 
 		// 접속
 		connected();
@@ -189,7 +208,6 @@ public class Sign_in extends JFrame implements Runnable {
 		main_login = new Main_login(this);
 		sign_up = new Sign_up(this);
 		pay = new Pay(this);
-		pointcharge = new PointCharge(this);
 		r_completed = new Reservation_completed(this);
 		m_ticket = new MobileTicket(this);
 		t_list = new TicketList(this);
@@ -197,20 +215,26 @@ public class Sign_in extends JFrame implements Runnable {
 		to_main = new Ticket_office_main(this);
 		ts_map = new Ticket_seat_map(this);
 		t_seat = new Ticket_seat(this);
-		snack = new Menu(this);
+		snack = new Snack(this);
+		admin = new admin_panel(this);
+		//pointcharge = new PointCharge(this);
 
 		setContentPane(pg);
 		
 		pg.add(main_login, "main_login");
-		pg.add(sign_up, "sign_up");
+		pg.add(sign_up, "sign_up");  //위에따로뺐으니 주석해도될지?
 		pg.add(pay, "pay");
-		pg.add(pointcharge, "pointcharge");
 		pg.add(r_completed, "r_completed");
 		pg.add(t_list, "t_list");
 		pg.add(tb_pay, "tb_pay");
 		pg.add(to_main, "to_main");
 		pg.add(ts_map, "ts_map");
 		pg.add(t_seat, "t_seat");
+		pg.add(admin, "admin");
+		pg.add(snack, "snack");
+		//pg.add(pointcharge, "pointcharge");
+		
+		
 	}
 
 	// 서버 연결 메서드
@@ -242,13 +266,14 @@ public class Sign_in extends JFrame implements Runnable {
 		} catch (Exception e) {
 		}
 	}
-//이건? 
+
 	// 초기값 메서드
 	private void init() {
 		signin_id_tf.setText("");
 		signin_pw_tf.setText("");
 		signin_id_tf.requestFocus();
 	}
+	
 	@Override
 	public void run() {
 		esc: while (true) {
@@ -266,16 +291,20 @@ public class Sign_in extends JFrame implements Runnable {
 						out.flush();
 						break;
 					case 104: 
-						System.out.println("sign_in의 104");
-						List<MobileTicket_VO> ticketList = p.getP_list();
-						System.out.println(ticketList);
-						t_list.showTicketList(ticketList);
-						break;
+						// 로그인 회원 티켓 리스트 가져오기
+						List<MobileTicket_VO> m_list = p.getM_list();
+						t_list.updateTable(m_list);
+						p.setCmd(101);
+						out.writeObject(p);
+						out.flush();
+						break ; //지호언니 브레이크 없음. ********넣어야한다고 말해야함.
+						
 					case 301:
 						List<TicketBox_VO> movieList = p.getT_list();
 						System.out.println(movieList);
 						to_main.addMovieListToTable(movieList);
 						// 영화목록은 성공, 건들지말자.
+						
 						break;
 					case 302:
 						List<TicketBox_VO> movieTimes = p.getT_list();
@@ -283,6 +312,7 @@ public class Sign_in extends JFrame implements Runnable {
 						// 상영시간표는 성공, 건들지말자.
 						break;
 					case 303:
+						
 
 						break;
 
@@ -306,8 +336,10 @@ public class Sign_in extends JFrame implements Runnable {
 								System.out.println("메인창 화면 전환 성공");
 							} else {
 								JOptionPane.showMessageDialog(getParent(), "관리자 로그인 성공");
-								//card.show(pg, ""); // 관리자 페이지로 이동 
+								card.show(pg, "admin"); // 관리자 페이지로 이동 
 								//관리자팀은 먼저 카드선언하는위에 관리자 화면단 선언해주고 여기에 써주세요.
+								//관리자 로그인시 버퍼인지, 메인이 잠시보였다가 관리자페이지로 뜸. 이건 수정하거나
+								//봐야할 필요성있음 ****
 							}
 						} else {
 							// 로그인 실패
@@ -316,9 +348,18 @@ public class Sign_in extends JFrame implements Runnable {
 						}
 						break;
 
-					case 502: // 회원가입
-
-					case 503: // 아이디 중복체크
+					case 502: // 회원가입 -혜지
+						System.out.println("signin 502cmd");
+						loginRes = p.getResult();
+						sign_up.loginRes();
+						break;
+						
+					case 503: // 아이디 중복체크 -혜지
+						System.out.println("signin cmd");
+						iddck = p.getResult();
+						System.out.println(iddck);
+						sign_up.dupchk();
+						break;
 					}
 				}
 			} catch (Exception e) {
@@ -329,7 +370,6 @@ public class Sign_in extends JFrame implements Runnable {
 
 	public void login_go() {
 		if (signin_id_tf.getText().trim().length() > 0 && signin_pw_tf.getText().trim().length() > 0) {
-			// 필드값이 두개다 이상이라면
 			
 			try {
 				CustomerVO c_vo = new CustomerVO();

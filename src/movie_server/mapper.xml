@@ -4,16 +4,24 @@
  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
 
-	<!-- 회원가입할때 customer 테이블에서 정보를 삽입한다. -->
+	<!-- 회원가입할때 customer 테이블에서 정보를 삽입한다. 
 	<insert id="customerIns" parameterType="movie_server.CustomerVO">
 		insert into
 		customer(cust_id, cust_password, cust_name, cust_birth,
 		cust_phone,admin_yn, delete_yn, point)
-		values (#{cust_id}, #{cust_password}, #{cust_name}, #{cust_birth},
-		#{cust_phone}, #{member_local}, #{member_email}, '0', '0', 0)
+		values (#{cust_id},
+		#{cust_password}, #{cust_name}, #{cust_birth},
+		#{cust_phone},
+		#{member_local}, #{member_email}, '0', '0', 0)
+	</insert>-->
+	
+	<!-- 회원가입할때 customer 테이블에서 정보를 삽입한다. 혜지 --> 
+	<insert id="customerIns" parameterType="movie_server.CustomerVO">
+		insert into customer(cust_id, cust_password, cust_name, cust_birth, cust_phone, admin_yn, delete_yn, point)
+		values(#{cust_id},#{cust_password},#{cust_name},#{cust_birth},#{cust_phone},#{admin_yn},#{delete_yn},#{point})
 	</insert>
-
-	<!-- 로그인할때 customer테이블에서 정보를 가져온다 -->
+	
+<!-- 로그인할때 customer테이블에서 정보를 가져온다 -->
 	<select id="login" parameterType="String"
 		resultType="movie_server.CustomerVO">
 		select * FROM customer WHERE cust_id = #{cust_id} AND cust_password =
@@ -25,13 +33,14 @@
 	<insert id="loginInfoInsert"
 		parameterType="movie_server.CustomerVO">
 		insert into login_info(cust_id, cust_name, point)
-		values (#{cust_id}, #{cust_name}, #{point})
+		values
+		(#{cust_id}, #{cust_name}, #{point})
 	</insert>
 
 
 	<!-- 아이디 중복 체크 (탈퇴한 회원의 아이디까지 사용할 수 없게) -->
-	<select id="idchk" resultType="movie_server.CustomerVO"
-		parameterType="movie_server.CustomerVO">
+	<select id="idchk" resultType="int"
+		parameterType="String">
 		SELECT COUNT(*) FROM customer WHERE cust_ID = #{cust_ID}
 	</select>
 
@@ -81,7 +90,6 @@
 		SET POINT = POINT + #{point}
 		WHERE CUST_ID = #{cust_id}
 	</update>
-
 	<!-- LOGIN_INFO 테이블의 POINT 업데이트 -->
 	<update id="updateLoginInfoPoint"
 		parameterType="movie_server.Pay_VO">
@@ -124,6 +132,16 @@
 		select movie_name from movie
 	</select>
 
+	<!-- 버튼으로 클릭한 값과 동일한 영화 정보를 가져오는 쿼리문
+	<select id="getMovieByName" parameterType="java.lang.String"
+		resultType="movie_server.TicketBox_VO">
+		SELECT *
+		FROM movie
+		WHERE movie_name = #{movieName}
+	</select> -->
+
+
+
 	<!-- 상영시간표 불러오기 1)시작 시간과 2)종료시간, 3)두개의 시간으로 검색 -->
 	<select id="stimeList" resultType="movie_server.TicketBox_VO">
 		select start_time from
@@ -140,5 +158,8 @@
 		WHERE
 		movie_name = #{movieTitle}
 	</select>
+
+	<!-- <select id="getMovieByName" resultType="movie_server.TicketBox_VO"> 
+		SELECT * FROM movie WHERE movie_name = #{movie_name} </select> -->
 
 </mapper>

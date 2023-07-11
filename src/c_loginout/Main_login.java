@@ -1,10 +1,11 @@
 package c_loginout;
 
-import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -13,8 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import movie_server.MobileTicket_VO;
 import movie_server.Pay_VO;
 import movie_server.Protocol;
+import movie_server.TicketBox_VO;
 import pay.PointChargeDialog;
 import pay.PointChargeDialog.PointChargeListener;
 
@@ -34,14 +37,14 @@ public class Main_login extends JPanel {
 		this.setLayout(null);
 
 		// 로고이미지 
-		JButton logo_bt = new JButton();
-		logo_bt.setFont(new Font("맑은 고딕", Font.BOLD, 16));
-		logo_bt.setBounds(99, 126, 575, 131);
+		JLabel logo = new JLabel();
+		logo.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+		logo.setBounds(99, 126, 575, 180); //131
 		
-		this.add(logo_bt);
+		this.add(logo);
 
 		// 하단에 액션리스너
-		JButton mobile_ticket_bt = new JButton("모바일 티켓");
+		JButton mobile_ticket_bt = new JButton("티켓리스트");
 		mobile_ticket_bt.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 		mobile_ticket_bt.setBounds(35, 35, 122, 49);
 		this.add(mobile_ticket_bt);
@@ -126,29 +129,48 @@ public class Main_login extends JPanel {
 		snack_bt.setBounds(412, 677, 122, 49);
 		this.add(snack_bt);
 
-		
-		//상영중인 영화 안하기로해서 이건 주석.
-		/*
-		 * JButton btnNewButton_4 = new JButton("+상영중인 영화 더보기");
-		 * btnNewButton_4.setBounds(204, 334, 167, 23); this.add(btnNewButton_4);
-		 */
-
 		setVisible(true);
 
 		//이미지 경로, images 파일에 밑의것이 있어야 활성화된다.
-		ImageIcon img = new ImageIcon("src/images/반지의제왕.png");
-		ImageIcon img1 = new ImageIcon("src/images/해리포터.png");
-		ImageIcon img2 = new ImageIcon("src/images/뽀로로.png");
-		ImageIcon img3 = new ImageIcon("src/images/엘리멘탈.jpg");
-		ImageIcon logo_img = new ImageIcon("src/images/logo.png");
+		ImageIcon originalIcon = new ImageIcon("src/images/반지의제왕.png");
+		Image originalImage = originalIcon.getImage();
+		Image resizedImage = originalImage.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),  java.awt.Image.SCALE_SMOOTH);
+		ImageIcon resizedIcon = new ImageIcon(resizedImage);
+		
+		ImageIcon originalIcon1 = new ImageIcon("src/images/해리포터.png");
+		Image originalImage1 = originalIcon1.getImage();
+		Image resizedImage1 = originalImage1.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),  java.awt.Image.SCALE_SMOOTH);
+		ImageIcon resizedIcon1 = new ImageIcon(resizedImage1);
+		
+		ImageIcon originalIcon2 = new ImageIcon("src/images/뽀로로.png");
+		Image originalImage2 = originalIcon2.getImage();
+		Image resizedImage2 = originalImage2.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),  java.awt.Image.SCALE_SMOOTH);
+		ImageIcon resizedIcon2 = new ImageIcon(resizedImage2);
 
+		ImageIcon originalIcon3 = new ImageIcon("src/images/엘리멘탈.jpg");
+		Image originalImage3 = originalIcon3.getImage();
+		Image resizedImage3 = originalImage3.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),  java.awt.Image.SCALE_SMOOTH);
+		ImageIcon resizedIcon3 = new ImageIcon(resizedImage3);
+		
 		// 포스터이미지 붙이기.
-		btnNewButton.setIcon(img);
-		btnNewButton_1.setIcon(img1);
-		btnNewButton_2.setIcon(img2);
-		btnNewButton_3.setIcon(img3);
-		// 로고이미지 붙이기.
-		logo_bt.setIcon(logo_img);
+		btnNewButton.setIcon(resizedIcon);
+		btnNewButton_1.setIcon(resizedIcon1);
+		btnNewButton_2.setIcon(resizedIcon2);
+		btnNewButton_3.setIcon(resizedIcon3);
+		
+		// 로고이미지.
+		// 이미지 로딩 및 크기 조절
+		ImageIcon originalIcon4 = new ImageIcon("src/images/logo.png");
+		Image originalImage4 = originalIcon4.getImage();
+		int lblWidth = logo.getWidth();  // 라벨의 크기를 얻어옵니다.
+		int lblHeight = logo.getHeight();
+		Image resizedImage4 = originalImage4.getScaledInstance(lblWidth, lblHeight,  java.awt.Image.SCALE_SMOOTH);
+
+		// 조정된 이미지를 이용하여 ImageIcon 객체 생성
+		ImageIcon resizedIcon4 = new ImageIcon(resizedImage4);
+
+		// 라벨에 이미지 아이콘 설정
+		logo.setIcon(resizedIcon4);  // logo_lbl은 JLabel 객체입니다.
 
 
 		// 버튼 액션리스너 =================================================
@@ -159,16 +181,22 @@ public class Main_login extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					signin.card.show(signin.pg, "t_list");
-					System.out.println("모바일티켓버튼 눌러 티켓리스트 전환 성공");
+					MobileTicket_VO m_vo = new MobileTicket_VO();
 					Protocol p = new Protocol();
-					p.setCmd(104);
+					
+					m_vo.setCust_id(signin.p.getC_vo().getCust_id());
+					p.setM_vo(m_vo);
+					p.setCmd(104);			
+					
 					signin.out.writeObject(p);
 					signin.out.flush();
+					System.out.println("104로 cmd 보냈니?");
+					
+					signin.card.show(signin.pg, "t_list");
+					System.out.println("티켓 리스트 화면 띄웠니?");
 				} catch (Exception e2) {
 					
 				}
-				
 			}
 		});
 
@@ -221,37 +249,37 @@ public class Main_login extends JPanel {
 		    }
 		});
 
+		
+		
+		
 		// 5. 각 포스터 누르면 매표소로 각 이름 체크되서가져가기.
 		btnNewButton.addActionListener(new ActionListener() {
 
 			@Override
+			
 			public void actionPerformed(ActionEvent e) {
-				// 여기엔 제일 밑에 하나의 메서드를 작성해서 동일하게 할수있도록 하자.
-				// 각 다른 포스터를 클릭해도, get으로 가져와서 sql문으로 확인할거니.
-				// 동일할거라 생각된다. cmd도 찾아달라는 동일명령어일테니...?
 				
+			
 			}
 		});
 
 		btnNewButton_1.addActionListener(new ActionListener() {
 
 			@Override
+			
 			public void actionPerformed(ActionEvent e) {
-				// 여기엔 제일 밑에 하나의 메서드를 작성해서 동일하게 할수있도록 하자.
-				// 각 다른 포스터를 클릭해도, get으로 가져와서 sql문으로 확인할거니.
-				// 동일할거라 생각된다. cmd도 찾아달라는 동일명령어일테니...?
-
+				
+			
 			}
 		});
 
 		btnNewButton_2.addActionListener(new ActionListener() {
 
 			@Override
+		
 			public void actionPerformed(ActionEvent e) {
-				// 여기엔 제일 밑에 하나의 메서드를 작성해서 동일하게 할수있도록 하자.
-				// 각 다른 포스터를 클릭해도, get으로 가져와서 sql문으로 확인할거니.
-				// 동일할거라 생각된다. cmd도 찾아달라는 동일명령어일테니...?
-
+				
+			
 			}
 		});
 
@@ -259,10 +287,8 @@ public class Main_login extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// 여기엔 제일 밑에 하나의 메서드를 작성해서 동일하게 할수있도록 하자.
-				// 각 다른 포스터를 클릭해도, get으로 가져와서 sql문으로 확인할거니.
-				// 동일할거라 생각된다. cmd도 찾아달라는 동일명령어일테니...?
-
+				
+			
 			}
 		});
 		//여기까지 5번 
@@ -273,9 +299,23 @@ public class Main_login extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				signin.card.show(signin.pg, "to_main");
-				System.out.println("빠른예매버튼 눌러 매표소 전환 성공");
 				
+				try {
+					
+					sign_in.card.show(signin.pg, "to_main");
+					sign_in.to_main.model1.setRowCount(0);
+					System.out.println("메인에서 홈으로 버튼 누르면 초기화,여긴홈");
+					System.out.println("빠른예매버튼 눌러 매표소 전환 성공");
+					//영화목록은 성공, 건들지말자.
+					Protocol p = new Protocol();
+					p.setCmd(301);
+					sign_in.out.writeObject(p);
+					sign_in.out.flush();			
+					System.out.println("cmd보냈나");
+
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
 			}
 		});
 
@@ -284,12 +324,16 @@ public class Main_login extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//signin.card.show(signin.pg, "snack");
+				sign_in.card.show(sign_in.pg, "snack");
 				System.out.println("매점버튼 눌러 매점 전환 성공");
 				
 			}
 		});
+		
+		
+
+		
 	}
 	
-
-}
+	}
+	

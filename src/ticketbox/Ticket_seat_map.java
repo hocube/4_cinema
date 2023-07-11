@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 import javax.swing.JCheckBox;
@@ -16,60 +17,70 @@ import c_loginout.Sign_in;
 //ticket_seat에 가서 객체생성후 화면에불러오자.
 public class Ticket_seat_map extends JPanel {
 	Sign_in sign_in;
-	private ArrayList<String> show_seatnum = new ArrayList<>();
+	private ArrayList<String> selectedSeats = new ArrayList<>();
+	JCheckBox seatCheckBox,sourceCheckBoxm;
+	String seatName;
 
 	public Ticket_seat_map(Sign_in signin) {
 
 		
 		this.sign_in = signin;
+		
 		setLayout(new GridLayout(5, 5)); // 5x5 그리드 레이아웃 설정
 
-		JFrame frame = new JFrame("Seat Grid");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//frame.getContentPane().add(new Ticket_seat_map());
-		frame.setSize(450, 450);
-		//frame.setVisible(true);
-		
 		char rowLabel = 'A';
 		for (int row = 0; row < 5; row++) {
 			for (int col = 0; col < 5; col++) {
 				String seatName = String.valueOf(rowLabel) + (col + 1);
 
-				JCheckBox seatCheckBox = new JCheckBox(seatName);
+				seatCheckBox = new JCheckBox(seatName);
 				seatCheckBox.addActionListener(new SeatCheckBoxListener()); // 리스너 추가
 				add(seatCheckBox);
 			}
 			rowLabel++;
 		}
+		
+	
+
 	}
 
+	
+	public void resetSelectedSeats() {
+		selectedSeats.clear();
+		updateSelectedSeatsLabel();
+	}
+	public void resetCheckBoxes() {
+	    Component[] components = getComponents();
+	    for (Component component : components) {
+	        if (component instanceof JCheckBox) {
+	            JCheckBox checkBox = (JCheckBox) component;
+	            checkBox.setSelected(false);
+	        }
+	    }
+	}
+	
 	private class SeatCheckBoxListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JCheckBox sourceCheckBox = (JCheckBox) e.getSource();
-			String seatName = sourceCheckBox.getText();
-			boolean isChecked = sourceCheckBox.isSelected();
-			if (isChecked) {
-				show_seatnum.add(seatName);
-			} else {
-				show_seatnum.remove(seatName);
-			}
-			System.out.println("선택한 좌석은 " + seatName + " 좌석이 " + (isChecked ? "선택되었습니다." : "취소되었습니다."));
-		}
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+	        JCheckBox sourceCheckBox = (JCheckBox) e.getSource();
+	        String seatName = sourceCheckBox.getText();
+	        boolean isChecked = sourceCheckBox.isSelected();
+	        if (isChecked) {
+	            selectedSeats.add(seatName);
+	        } else {
+	            selectedSeats.remove(seatName);
+	        }
+	        updateSelectedSeatsLabel();
+	    }
 	}
-
-	// 각 극장을 눌렀을때, 선택된 체크들이 최기화 되도록.
-	public void resetSeatSelection() {
-		for (Component component : getComponents()) {
-			if (component instanceof JCheckBox) {
-				JCheckBox checkBox = (JCheckBox) component;
-				checkBox.setSelected(false);
-			}
-		}
+	public void updateSelectedSeatsLabel() {
+	    StringBuilder sb = new StringBuilder();
+	    for (String seat : selectedSeats) {
+	        sb.append(seat).append(", ");
+	    }
+	    if (sb.length() > 0) {
+	        sb.setLength(sb.length() - 2);
+	    }
+	    sign_in.t_seat.lblNewLabel_4.setText(sb.toString());
 	}
-
-	// 좌석의 사이즈.
-	
-	
-
-	}
+}

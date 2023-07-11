@@ -3,6 +3,7 @@ package movie_server;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -72,38 +73,44 @@ public class CP_Client extends Thread{
                     case 104: // 현재 로그인 회원의 티켓 리스트 출력
                     	System.out.println("===CP_Client의 case 104===");
                     	
-                    	
-                    	List<MobileTicket_VO> m_list = DAO.getTicketList();
-                    	//DAO dao = new DAO();
-                		//ArrayList<MobileTicket_VO> m_list = DAO.getTicketList(currentUserId);
-                		System.out.println("티켓 리스트 가져오기 성공");
-                		p.setP_list(m_list);
-                    	out.writeObject(p);
-                    	out.flush();
-                    	System.out.println("보냈니?");
+                    	List<MobileTicket_VO> m_list = DAO.getTicketList(p.m_vo.getCust_id());
+                    	p.setM_list(m_list);
+
+						out.writeObject(p);
+						out.flush();
                     	break;
                     	
-                    case 301 :   //영화목록가져오라는 요청을 받아, 여기서 받아서 DAO로 보내자.            
+                    case 301 :   
+                    	//영화목록가져오라는 cmd        
                         List<TicketBox_VO> t_list = DAO.getMovie_name(); // 영화 목록을 DB에서 가져옴                  
-                         p.setT_list(t_list);
-                         //영화 이름만 추출하여 문자열 배열로 변환                  
-                         out.writeObject(p); // 클라이언트에게 프로토콜 전송
-                         out.flush();
+                        System.out.println("301담았다!!");
+                        p.setT_list(t_list);
+                        for (TicketBox_VO k : t_list) {
+							System.out.println(k);
+							System.out.println("301마지막, 여기까지왔는가? 지건!");
+						}
+                        //영화 이름만 추출하여 문자열 배열로 변환                  
+                        out.writeObject(p); // 클라이언트에게 프로토콜 전송
+                        out.flush();
 
                          break;
 
                      case 302 :
-                        //영화 시간 갖고오는 cmd 
-                        System.out.println("cmd302 왔음");
-                        
-                        List<TicketBox_VO> movieTimes = DAO.getMovieTimes(getName());
-                        System.out.println("담아서 메인인으로 보내자");
-                        p.setT_list(movieTimes);
-                        out.writeObject(p);
-                        out.flush();
-                        break;
+                    	//영화 시간 갖고오는 cmd 
+                         System.out.println("CP9 302입니다.");                         
+                         List<TicketBox_VO> movieTimes = DAO.getMovieTimes(getName());
+                         System.out.println("담아서 메인인으로 보내자");
+                         p.setT_list(movieTimes);
+                         out.writeObject(p);
+                         out.flush();
+                         System.out.println("302마지막이올시다!");
+                       
+                         break;
                         
                      case 303:
+                    	 
+                           
+
                      	break;
 						
 					case 501:	// 로그인
@@ -153,8 +160,10 @@ public class CP_Client extends Thread{
 						break;
 					
 					case 502:	// 회원가입
-						int result502 = 0;
-						result502 = DAO.getIns(p.getC_vo());
+						System.out.println("cpclient 502 도촥~");
+						CustomerVO vo = p.getC_vo();
+						
+						int result502 = DAO.signup_getIns(vo);
 
 						if (result502 > 0) {
 							Protocol p502 = new Protocol();
@@ -165,11 +174,14 @@ public class CP_Client extends Thread{
 						}
 						break;
 					case 503:	// 아이디 중복 확인
-						//int result503 = DAO.getIdChk(p.getC_vo().getCust_id());
-
+						System.out.println("cp_client cmd503 왔음");
+						
+						int result503 = DAO.getIdChk(p.getC_vo().getCust_id());
+						System.out.println(result503);
+						
 						Protocol p503 = new Protocol();
 						p503.setCmd(503);
-						//p503.setResult(result503);
+						p503.setResult(result503);
 						out.writeObject(p503);
 						out.flush();
 						break;

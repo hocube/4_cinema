@@ -64,11 +64,24 @@ public class DAO {
 		ss.commit();
 		return result;
 	}
-
-	public static List<CustomerVO> getIdChk(String loginchk) {
-		List<CustomerVO> vo = getSession().selectOne("idchk", loginchk);
-		return vo;
+	
+	// 회원가입시 customer테이블에 정보를 삽입할 것이다 = 혜지
+	public static int signup_getIns(CustomerVO vo) throws Exception{
+		int result = 0;
+		if(!(vo.getCust_id().isEmpty())) {
+			result = getSession().insert("customerIns", vo);
+			ss.commit();
+			return result;
+		}else
+			return 0;
 	}
+	// 회원가입시 아이디중복 체크 = 혜지
+		public static int getIdChk(String cust_id) {
+			int result = 0;
+			result = getSession().selectOne("idchk", cust_id);
+			return result;
+		}
+	
 
 	// 로그인한 회원의 회원정보 가져오기
 	// 지호
@@ -142,10 +155,10 @@ public class DAO {
 	}
 
 	//로그인한 회원의 예매 내역 리스트
-	public static List<MobileTicket_VO> getTicketList() {
+	public static List<MobileTicket_VO> getTicketList(String custid) {
 		System.out.println("104의 DAO");
-		List<MobileTicket_VO> ticketList = getSession().selectList("getTicketList");
-		return ticketList;
+		List<MobileTicket_VO> m_list = getSession().selectList("getTicketList", custid);
+		return m_list;
 	}
 
 	// 리스트에서 선택된 티켓 정보 가져오기
@@ -178,34 +191,34 @@ public class DAO {
 
 	// 지혜
 	// mapper 로가서 prn_time sql문 실행하고 값을 가져오자.
-	public static List<TicketBox_VO> getStart_time() {
-		System.out.println("DAO와서 sql문11 하고올게요");
-		List<TicketBox_VO> stimeList = getSession().selectList("movie.stimeList");
+		public static List<TicketBox_VO> getStart_time() {
+			System.out.println("DAO와서 sql문 하고올게요11");
+			List<TicketBox_VO> stimeList = getSession().selectList("stimeList");
+			System.out.println("mapper다녀왔어요11");
+			return stimeList;
+		}
 
-		return stimeList;
+		public static List<TicketBox_VO> getEnd_time() {
+			System.out.println("DAO와서 sql문 하고올게요22");
+			List<TicketBox_VO> etimeList = getSession().selectList("etimeList");
+			System.out.println("mapper다녀왔어요22");
+			return etimeList;
 
-	}
+		}
 
-	public static List<TicketBox_VO> getEnd_time() {
-		System.out.println("DAO와서 sql문22 하고올게요");
-		List<TicketBox_VO> etimeList = getSession().selectList("movie.etimeList");
+		public static List<TicketBox_VO> getMovieTimes(String movieTitle) {
+			List<TicketBox_VO> vo = getSession().selectList("getMovieTimes", movieTitle);
 
-		return etimeList;
+			return vo;
+		}
 
-	}
+		public static List<TicketBox_VO> getMovie_name() {
+			System.out.println("DAO와서 sql문 하고올게요33");
 
-	public static List<TicketBox_VO> getMovieTimes(String movieTitle) {
-		List<TicketBox_VO> vo = getSession().selectList("movie.getMovieTimes", movieTitle);
-
-		return vo;
-	}
-
-	public static List<TicketBox_VO> getMovie_name() {
-		System.out.println("DAO와서 sql문 하고올게요");
-
-		List<TicketBox_VO> movieList = getSession().selectList("movie.movieList");
-		System.out.println("mapper다녀왔어요" + movieList);
-		return movieList;
-	}
-
+			List<TicketBox_VO> movieList = getSession().selectList("movieList");
+			System.out.println("mapper다녀왔어요33" + movieList);
+			return movieList;
+		}
+		
+	
 }
