@@ -205,9 +205,7 @@ public class Sign_in extends JFrame implements Runnable {
 		
 		main_login = new Main_login(this);
 		sign_up = new Sign_up(this);
-		pay = new Pay(this);
 		r_completed = new Reservation_completed(this);
-		m_ticket = new MobileTicket(this);
 		t_list = new TicketList(this);
 		tb_pay = new Ticket_before_pay(this);
 		to_main = new Ticket_office_main(this);
@@ -219,8 +217,7 @@ public class Sign_in extends JFrame implements Runnable {
 		setContentPane(pg);
 		
 		pg.add(main_login, "main_login");
-		pg.add(sign_up, "sign_up");  //위에따로뺐으니 주석해도될지?
-		pg.add(pay, "pay");
+		pg.add(sign_up, "sign_up");  //위에 따로 뺐으니 주석해도될지?
 		pg.add(r_completed, "r_completed");
 		pg.add(t_list, "t_list");
 		pg.add(tb_pay, "tb_pay");

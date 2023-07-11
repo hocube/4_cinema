@@ -5,39 +5,40 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 import c_loginout.Sign_in;
-import movie_server.DAO;
 import movie_server.MobileTicket_VO;
 
-public class MobileTicket extends JPanel {
+public class MobileTicket extends JDialog {
 	Sign_in sign_in;
 	
 	JPanel MainP, CenterWrapperPanel, ButtonPanel;
 	JLabel ticketNumLabel, NameLabel, DayLabel, TimeLabel, theaterIdLabel, SeatLabel;
 	JButton complete;
-	private MobileTicket_VO ticket;
     private TicketList ticketList;
-    private DAO DAO;
-    private JTable ticketTable; // JTable 객체를 멤버 변수로 추가
 
-	public MobileTicket(Sign_in signin) {
-		this.sign_in = signin;
-
+	public MobileTicket(Frame parent) {
+		super(parent, "모바일 티켓", true);
+		//this.sign_in = signin;
+		this.setModal(true); 
+		
 		MainP = new JPanel();
 		MainP.setLayout(new BoxLayout(MainP, BoxLayout.Y_AXIS));
 		add(MainP);
@@ -55,13 +56,10 @@ public class MobileTicket extends JPanel {
 		CenterWrapperPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
 		MainP.add(CenterWrapperPanel);
 
-		// 예매 내용
-		
 		// 예매번호
 		JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p1.setBackground(Color.WHITE);
 		ticketNumLabel = new JLabel();
-        //ticketNumLabel.setText("예매번호 : " + String.valueOf(ticket.getTicket_num()));
 		ticketNumLabel.setFont(new Font("굴림", Font.BOLD, 18));
 		p1.add(ticketNumLabel);
 		
@@ -69,7 +67,6 @@ public class MobileTicket extends JPanel {
 		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p2.setBackground(Color.WHITE);
 		NameLabel = new JLabel();
-        //NameLabel.setText(ticket.getMovie_name());
 		NameLabel.setFont(new Font("굴림", Font.BOLD, 25));
 		p2.add(NameLabel);
 
@@ -77,7 +74,6 @@ public class MobileTicket extends JPanel {
 		JPanel p3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p3.setBackground(Color.WHITE);
 		DayLabel = new JLabel();
-        //DayLabel.setText(ticket.getMovie_date().toString());
 		DayLabel.setFont(new Font("굴림", Font.BOLD, 18));
 		p3.add(DayLabel);
 
@@ -85,7 +81,6 @@ public class MobileTicket extends JPanel {
 		JPanel p4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p4.setBackground(Color.WHITE);
 		TimeLabel = new JLabel();
-        //TimeLabel.setText(ticket.getStart_time() + " 시작");
 		TimeLabel.setFont(new Font("굴림", Font.BOLD, 18));
 		p4.add(TimeLabel);
 
@@ -93,7 +88,6 @@ public class MobileTicket extends JPanel {
 		JPanel p5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p5.setBackground(Color.WHITE);
 		theaterIdLabel = new JLabel();
-        //theaterIdLabel.setText(ticket.getTheater_id()+"관");
 		theaterIdLabel.setFont(new Font("굴림", Font.BOLD, 18));
 		p5.add(theaterIdLabel);
 
@@ -101,7 +95,6 @@ public class MobileTicket extends JPanel {
 		JPanel p6 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p6.setBackground(Color.WHITE);
 		SeatLabel = new JLabel();
-        //SeatLabel.setText(ticket.getTheater_seat());
 		SeatLabel.setFont(new Font("굴림", Font.BOLD, 18));
 		p6.add(SeatLabel);
 
@@ -170,7 +163,7 @@ public class MobileTicket extends JPanel {
 		
 		// 버튼 패널
 		ButtonPanel = new JPanel();
-		complete = new JButton("완료");
+		complete = new JButton("확인 완료");
 		ButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 		// ButtonPanel의 테두리에 빈 여백 추가      상, 좌, 하, 우
 		ButtonPanel.add(complete);
@@ -179,35 +172,29 @@ public class MobileTicket extends JPanel {
 		MainP.add(CenterWrapperPanel, BorderLayout.CENTER);
 		MainP.add(ButtonPanel, BorderLayout.SOUTH);
 
-		setSize(350, 600);
-		//setLocationRelativeTo(null);
-		setVisible(true);
-		//setDefaultCloseOperation(EXIT_ON_CLOSE);
-		//setResizable(false);
+        setSize(350, 600);
+        setLocationRelativeTo(null);  // 화면 중앙에 위치하게 함
 		
-		// 모바일 티켓 x버튼 눌렀을 때 티켓 리스트 창 보이게 하기
-//		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-//		addWindowListener(new WindowAdapter() {
-//		    @Override
-//		    public void windowClosing(WindowEvent e) {
-//		        // 모바일 티켓 창 닫기
-//		        dispose();
-//		        // 티켓 리스트 창 다시 보이기
-//		        ticketList.setVisible(true);
-//		    }
-//		});
-		
-//		// 완료 버튼 -> 창 꺼지고 
-//		complete.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				
-//	                	// 모바일 티켓 창 닫기
-//	                	//dispose();
-//	                	// 티켓 목록 창 다시 표시
-//	                	ticketList.setVisible(true);
-//			}
-//		});
-	}	
+		// 확인 완료 버튼 -> 창 꺼지고 
+        // 완료 버튼 -> 창 꺼지고 
+        complete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 모바일 티켓 창 닫기
+                dispose();
+            }
+        });
 	}
+	
+	// TicketList에서 받아온 티켓 정보를 라벨에 세팅해주는 메서드
+	public void showMobileTicket(MobileTicket_VO m_vo) {
+	    ticketNumLabel.setText("예매번호 : " + String.valueOf(m_vo.getTicket_num()));
+	    NameLabel.setText(m_vo.getMovie_name());
+	    DayLabel.setText(m_vo.getMovie_date().toString());
+	    TimeLabel.setText(m_vo.getStart_time() + " 시작");
+	    theaterIdLabel.setText(m_vo.getTheater_id() + "관");
+	    SeatLabel.setText(m_vo.getTheater_seat());
+	    setVisible(true);
+	}
+
+}

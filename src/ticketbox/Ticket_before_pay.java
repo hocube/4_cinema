@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
@@ -18,8 +19,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import c_loginout.Sign_in;
+import pay.Pay;
+import ticket.MobileTicket;
+import ticket.TicketList;
 //이걸로 합치기!
 //결제정보창, 결제확인창
 public class Ticket_before_pay extends JPanel{
@@ -127,8 +132,7 @@ public class Ticket_before_pay extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			
-				sign_in.card.show(sign_in.pg, "pay");
+				Pay dialog = new Pay((Frame) SwingUtilities.getWindowAncestor(Ticket_before_pay.this));
 				//결제하기 눌렀을때 이후로 나오는 기능 (db에 insert 이후 기능작성하기 -지호)
 				
 			}

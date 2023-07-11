@@ -3,33 +3,43 @@ package ticket;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import c_loginout.Main_login;
 import c_loginout.Sign_in;
+import movie_server.DAO;
 import movie_server.MobileTicket_VO;
+import movie_server.Pay_VO;
 import movie_server.Protocol;
+import pay.PointChargeDialog;
 
-public class TicketList extends JPanel {
+// 원래꺼
+public class TicketList extends JPanel{
 	Sign_in sign_in;
 	JPanel Panel;
 	JTable ticketTable;
 	JButton ticketButton, cancelButton, backButton;
-
+	String currentUserId;
+	
 	public TicketList(Sign_in signin) {
 		this.sign_in = signin;
-
+		
 		setPreferredSize(new Dimension(600, 500));
 		setVisible(true);
 
@@ -70,71 +80,91 @@ public class TicketList extends JPanel {
 		Panel.add(ButtonPanel, BorderLayout.SOUTH);
 
 		add(Panel);
-
-		// "티켓 확인" 버튼
+		
+		// 티켓 확인 버튼 - 프로토콜 사용 안함.
 		ticketButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				MobileTicket dialog = new MobileTicket((Frame) SwingUtilities.getWindowAncestor(TicketList.this));
 
 				// 현재 선택된 행의 정보 가져오기
 				int selectedRow = ticketTable.getSelectedRow();
-
-				// 선택 된 행의 정보 가져오기
+				
 				if (selectedRow != -1) {
-					// DAO ticketDAO = new DAO();
-					// List<MobileTicket_VO> ticket = DAO.getTicketByRow();
-
-					// 해당 모바일 티켓 화면에 띄우기
-					new MobileTicket(signin); // TicketList 객체 전달
-
+					try {
+						// 선택 된 행의 정보 가져오기
+			            int ticketNumber = (int) ticketTable.getValueAt(selectedRow, 0);
+			            String movieTitle = (String) ticketTable.getValueAt(selectedRow, 1);
+			            String screeningDate = (String) ticketTable.getValueAt(selectedRow, 2);
+			            String startTime = (String) ticketTable.getValueAt(selectedRow, 3);
+			            String theater = (String) ticketTable.getValueAt(selectedRow, 4);
+			            String seatInfo = (String) ticketTable.getValueAt(selectedRow, 5);
+			            
+		                // MobileTicket_VO에 정보 저장
+		                MobileTicket_VO m_vo = new MobileTicket_VO();
+		                m_vo.setTicket_num(ticketNumber);
+		                m_vo.setMovie_name(movieTitle);
+		                m_vo.setMovie_date(screeningDate);
+		                m_vo.setStart_time(startTime);
+		                m_vo.setTheater_id(theater);
+		                m_vo.setTheater_seat(seatInfo);
+		                
+		                // showMobileTicket 메서드 호출하여 파라미터로 전달
+		                dialog.showMobileTicket(m_vo);
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+				} else {
+					JOptionPane.showMessageDialog(getParent(), "티켓을 선택해 주세요.");
 				}
 			}
 		});
 
+
 		// 예매 취소 버튼 -> 선택한 행의 티켓 삭제 후 리스트 업데이트
 		cancelButton.addActionListener(new ActionListener() {
-	          @Override
-	          public void actionPerformed(ActionEvent e) {
-	              int selectedRow = ticketTable.getSelectedRow(); //행 선택 여부
-	              if (selectedRow != -1) {
-	                  int ticketNumber = (int) ticketTable.getValueAt(selectedRow, 0); //티켓넘버
-	                  String movieTitle = (String) ticketTable.getValueAt(selectedRow, 1); //영화제목
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        int selectedRow = ticketTable.getSelectedRow();
+		        if (selectedRow != -1) {
+		            int ticketNumber = (int) ticketTable.getValueAt(selectedRow, 0);
+		            String movieTitle = (String) ticketTable.getValueAt(selectedRow, 1);
 
-	                  int result = JOptionPane.showConfirmDialog(null, "'" + movieTitle + "'" + " 예매를 취소하시겠습니까?", "예매 취소",
-	                          JOptionPane.YES_NO_OPTION);
+		            int result = JOptionPane.showConfirmDialog(null, "'" + movieTitle + "'" + " 예매를 취소하시겠습니까?", "예매 취소",
+		                    JOptionPane.YES_NO_OPTION);
 
-	                  // "예" 선택 시
-	                  if (result == JOptionPane.YES_OPTION) {
-	                      try {
-	                          MobileTicket_VO m_vo = new MobileTicket_VO();
-	                          Protocol p = new Protocol();        
-	                          m_vo.setTicket_num(ticketNumber);
-	                          p.setM_vo(m_vo);
-	                          p.setCmd(105);
+		            // "예" 선택 시
+		            if (result == JOptionPane.YES_OPTION) {
+		                try {
+		                    MobileTicket_VO m_vo = new MobileTicket_VO();
+		                    Protocol p = new Protocol();        
+		                    m_vo.setTicket_num(ticketNumber);
+		                    p.setM_vo(m_vo);
+		                    p.setCmd(105);
 
-	                          signin.out.writeObject(p);
-	                          signin.out.flush();
-	                      } catch (Exception e2) {
-	                          e2.printStackTrace();
-	                      }
+		                    signin.out.writeObject(p);
+		                    signin.out.flush();
+		                } catch (Exception e2) {
+		                    e2.printStackTrace();
+		                }
 
-	                  }
-	              } else {
-	                  JOptionPane.showMessageDialog(getParent(), "티켓을 선택해 주세요.");
-	              }
-	          }
-	      });
-
+		            }
+		        } else {
+		            JOptionPane.showMessageDialog(getParent(), "티켓을 선택해 주세요.");
+		        }
+		    }
+		});
+		
+		// 뒤로 가기 버튼
 		backButton.addActionListener(new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				signin.card.show(signin.pg, "main_login");
 			}
 		});
 	}
-
+	
 	// Table에 리스트 보여주는 메서드
 	public void updateTable(List<MobileTicket_VO> tickets) {
 		DefaultTableModel model = (DefaultTableModel) ticketTable.getModel();
