@@ -66,7 +66,7 @@ public class Main_login extends JPanel {
 		// sign_in 에서 run으로 명령쓰고, 여기로 xxx.add 였나? 다시 확인하기. ***
 		
 		// [0709 지호] 
-		JLabel login_name_label = new JLabel(signin.p.getC_vo().getCust_name() + " 님");
+		JLabel login_name_label = new JLabel(signin.cvo.getCust_name() + " 님");
 		login_name_label.setHorizontalAlignment(SwingConstants.CENTER);
 		login_name_label.setBounds(330, 22, 57, 15);
 		this.add(login_name_label);
@@ -77,7 +77,7 @@ public class Main_login extends JPanel {
 		// sign_in 에서 run으로 명령쓰고, 여기로 xxx.add 였나? 다시 확인하기. ***
 		
 		// [0709 지호] 
-		JLabel login_point_label = new JLabel("잔여포인트 : " + signin.p.getC_vo().getPoint());
+		JLabel login_point_label = new JLabel("잔여포인트 : " + signin.cvo.getPoint());
 		login_point_label.setHorizontalAlignment(SwingConstants.CENTER);
 		login_point_label.setBounds(308, 41, 146, 15);
 		this.add(login_point_label);
@@ -184,16 +184,14 @@ public class Main_login extends JPanel {
 					MobileTicket_VO m_vo = new MobileTicket_VO();
 					Protocol p = new Protocol();
 					
-					m_vo.setCust_id(signin.p.getC_vo().getCust_id());
+					m_vo.setCust_id(signin.cvo.getCust_id());
 					p.setM_vo(m_vo);
 					p.setCmd(104);			
 					
 					signin.out.writeObject(p);
 					signin.out.flush();
-					System.out.println("104로 cmd 보냈니?");
-					
+				
 					signin.card.show(signin.pg, "t_list");
-					System.out.println("티켓 리스트 화면 띄웠니?");
 				} catch (Exception e2) {
 					
 				}

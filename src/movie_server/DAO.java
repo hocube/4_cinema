@@ -184,8 +184,9 @@ public class DAO {
 	}  */
 
 	// 예매 취소하기
-	public int cancelTicket(int ticket_num) {
+	public static int cancelTicket(int ticket_num) {
 		int result = getSession().delete("cancelTicket", ticket_num);
+		ss.commit();
 		return result;
 	}
 

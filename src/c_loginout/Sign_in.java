@@ -217,7 +217,6 @@ public class Sign_in extends JFrame implements Runnable {
 		t_seat = new Ticket_seat(this);
 		snack = new Snack(this);
 		admin = new admin_panel(this);
-		//pointcharge = new PointCharge(this);
 
 		setContentPane(pg);
 		
@@ -232,9 +231,6 @@ public class Sign_in extends JFrame implements Runnable {
 		pg.add(t_seat, "t_seat");
 		pg.add(admin, "admin");
 		pg.add(snack, "snack");
-		//pg.add(pointcharge, "pointcharge");
-		
-		
 	}
 
 	// 서버 연결 메서드
@@ -284,27 +280,28 @@ public class Sign_in extends JFrame implements Runnable {
 					switch (p.getCmd()) {
 					case 0: // 종료
 						break esc;
-					case 102:
-						// 현재 접속한 회원정보 조회
+					case 102: // 현재 접속한 회원정보 조회
 						p.setCmd(101);
 						out.writeObject(p);
 						out.flush();
 						break;
-					case 104: 
-						// 로그인 회원 티켓 리스트 가져오기
+					case 104: //티켓 리스트 가져오기
 						List<MobileTicket_VO> m_list = p.getM_list();
 						t_list.updateTable(m_list);
-						p.setCmd(101);
-						out.writeObject(p);
-						out.flush();
-						break ; //지호언니 브레이크 없음. ********넣어야한다고 말해야함.
-						
+						break ;
+					case 105: // 예매 취소
+						System.out.println("sign_in run() 105");
+						int result = p.getResult();
+						if(result == 1) {
+							System.out.println("삭제 성공");
+						}else
+							System.out.println("삭제 실패");
+						break ;
 					case 301:
 						List<TicketBox_VO> movieList = p.getT_list();
 						System.out.println(movieList);
 						to_main.addMovieListToTable(movieList);
 						// 영화목록은 성공, 건들지말자.
-						
 						break;
 					case 302:
 						List<TicketBox_VO> movieTimes = p.getT_list();
@@ -312,18 +309,17 @@ public class Sign_in extends JFrame implements Runnable {
 						// 상영시간표는 성공, 건들지말자.
 						break;
 					case 303:
-						
-
 						break;
-
 					case 501: // 로그인
 						// 지호
 						System.out.println("Sign_in의 501");
 						
 						if(p.getC_vo() != null) {
+							cvo = p.getC_vo();
 							
 							// 화면 초기화
 							LoginSuccess();
+
 							
 							if(p.getC_vo().getAdmin_yn().equals("0")) {
 								// 로그인 성공
