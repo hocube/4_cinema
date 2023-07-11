@@ -94,34 +94,37 @@ public class TicketList extends JPanel {
 
 		// 예매 취소 버튼 -> 선택한 행의 티켓 삭제 후 리스트 업데이트
 		cancelButton.addActionListener(new ActionListener() {
+	          @Override
+	          public void actionPerformed(ActionEvent e) {
+	              int selectedRow = ticketTable.getSelectedRow(); //행 선택 여부
+	              if (selectedRow != -1) {
+	                  int ticketNumber = (int) ticketTable.getValueAt(selectedRow, 0); //티켓넘버
+	                  String movieTitle = (String) ticketTable.getValueAt(selectedRow, 1); //영화제목
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int selectedRow = ticketTable.getSelectedRow();
-				int ticketNumber = (int) ticketTable.getValueAt(selectedRow, 0);
-				
-				try {
-					if (selectedRow != -1) { //선택 하면
-						
-						MobileTicket_VO m_vo = new MobileTicket_VO();
-						Protocol p = new Protocol();
-						
-						m_vo.setTicket_num(ticketNumber);
-						p.setM_vo(m_vo);
-						p.setCmd(105);			
-						
-						signin.out.writeObject(p);
-						signin.out.flush();
-						System.out.println("프로토콜 잘 전달했니?");
-					} else {
-						// 티켓 선택 안 했을 때
-						JOptionPane.showMessageDialog(getParent(), "티켓을 선택해 주세요.");
-					}
-				} catch (Exception e2) {
-				}
+	                  int result = JOptionPane.showConfirmDialog(null, "'" + movieTitle + "'" + " 예매를 취소하시겠습니까?", "예매 취소",
+	                          JOptionPane.YES_NO_OPTION);
 
-			}
-		});
+	                  // "예" 선택 시
+	                  if (result == JOptionPane.YES_OPTION) {
+	                      try {
+	                          MobileTicket_VO m_vo = new MobileTicket_VO();
+	                          Protocol p = new Protocol();        
+	                          m_vo.setTicket_num(ticketNumber);
+	                          p.setM_vo(m_vo);
+	                          p.setCmd(105);
+
+	                          signin.out.writeObject(p);
+	                          signin.out.flush();
+	                      } catch (Exception e2) {
+	                          e2.printStackTrace();
+	                      }
+
+	                  }
+	              } else {
+	                  JOptionPane.showMessageDialog(getParent(), "티켓을 선택해 주세요.");
+	              }
+	          }
+	      });
 
 		backButton.addActionListener(new ActionListener() {
 

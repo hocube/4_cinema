@@ -31,7 +31,7 @@ import movie_server.MobileTicket_VO;
 import movie_server.Protocol;
 import movie_server.TicketBox_VO;
 import pay.Pay;
-import pay.PointCharge;
+import pay.PointChargeDialog;
 import pay.Reservation_completed;
 import snackbar.Snack;
 import snackbar.admin_panel;
@@ -65,7 +65,7 @@ public class Sign_in extends JFrame implements Runnable {
 	public Main_login main_login;
 	public CustomerVO cvo;
 	public Pay pay;
-	public PointCharge pointcharge;
+	public PointChargeDialog pointcharge;
 	public Reservation_completed r_completed;
 	// public Menu menu;
 	public MobileTicket m_ticket;
@@ -81,7 +81,6 @@ public class Sign_in extends JFrame implements Runnable {
 
 	public Sign_in() {
 		super("4딸라-필름");
-
 		
 		//이부분 추가 = 혜지
 		card = new CardLayout();
@@ -148,7 +147,6 @@ public class Sign_in extends JFrame implements Runnable {
 				
 				pg.add(contentPane, "sign_in");
 				pg.add(sign_up, "sign_up");
-				
 
 		// 접속
 		connected();
@@ -290,12 +288,20 @@ public class Sign_in extends JFrame implements Runnable {
 						t_list.updateTable(m_list);
 						break ;
 					case 105: // 예매 취소
-						System.out.println("sign_in run() 105");
 						int result = p.getResult();
+						System.out.println("sign_in run() 105 : " + result);
 						if(result == 1) {
-							System.out.println("삭제 성공");
+							JOptionPane.showMessageDialog(getParent(), "예매가 취소되었습니다.");
+							
+							MobileTicket_VO m_vo = new MobileTicket_VO();
+							m_vo.setCust_id(cvo.getCust_id());
+							p.setM_vo(m_vo);
+						
+							p.setCmd(104); //티켓 목록 다시 보여주는 명령어 전송
+							out.writeObject(p);
+							out.flush();
 						}else
-							System.out.println("삭제 실패");
+							JOptionPane.showMessageDialog(getParent(), "예매 취소가 실패하였습니다.");
 						break ;
 					case 301:
 						List<TicketBox_VO> movieList = p.getT_list();

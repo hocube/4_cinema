@@ -23,7 +23,7 @@ import pay.PointChargeDialog.PointChargeListener;
 
 public class Main_login extends JPanel {
 	private JButton main_point_charge_bt;
-	
+
 	Sign_in sign_in;
 	// Movie_chart_view1 v1 = new Movie_chart_view1(); //두개 안씀
 	// Movie_chart_view2 v2 = new Movie_chart_view2();
@@ -31,16 +31,16 @@ public class Main_login extends JPanel {
 	// CardLayout card = new CardLayout();
 
 	public Main_login(Sign_in signin) {
-		
+
 		this.sign_in = signin;
 
 		this.setLayout(null);
 
-		// 로고이미지 
+		// 로고이미지
 		JLabel logo = new JLabel();
 		logo.setFont(new Font("맑은 고딕", Font.BOLD, 16));
-		logo.setBounds(99, 126, 575, 180); //131
-		
+		logo.setBounds(99, 126, 575, 180); // 131
+
 		this.add(logo);
 
 		// 하단에 액션리스너
@@ -64,8 +64,8 @@ public class Main_login extends JPanel {
 		// 로그인시, 로그인한 정보 얻어서, 그사람의 이름 갖고오게 하기.
 		// 여기서 런을 안쓰게된다면 어떻게 프로토콜 부르지?
 		// sign_in 에서 run으로 명령쓰고, 여기로 xxx.add 였나? 다시 확인하기. ***
-		
-		// [0709 지호] 
+
+		// [0709 지호]
 		JLabel login_name_label = new JLabel(signin.cvo.getCust_name() + " 님");
 		login_name_label.setHorizontalAlignment(SwingConstants.CENTER);
 		login_name_label.setBounds(330, 22, 57, 15);
@@ -75,19 +75,19 @@ public class Main_login extends JPanel {
 		// 로그인시, 로그인한 정보 얻어서, 그사람의 포인트 갖고오게 하기.
 		// 여기서 런을 안쓰게된다면 어떻게 프로토콜 부르지?
 		// sign_in 에서 run으로 명령쓰고, 여기로 xxx.add 였나? 다시 확인하기. ***
-		
-		// [0709 지호] 
+
+		// [0709 지호]
 		JLabel login_point_label = new JLabel("잔여포인트 : " + signin.cvo.getPoint());
 		login_point_label.setHorizontalAlignment(SwingConstants.CENTER);
 		login_point_label.setBounds(308, 41, 146, 15);
 		this.add(login_point_label);
 
 		// 하단에 액션리스너
-        // 포인트 충전 버튼 생성 및 추가
-        main_point_charge_bt = new JButton("포인트 충전");
-        main_point_charge_bt.setFont(new Font("맑은 고딕", Font.BOLD, 10));
-        main_point_charge_bt.setBounds(563, 35, 89, 25);
-        add(main_point_charge_bt);
+		// 포인트 충전 버튼 생성 및 추가
+		main_point_charge_bt = new JButton("포인트 충전");
+		main_point_charge_bt.setFont(new Font("맑은 고딕", Font.BOLD, 10));
+		main_point_charge_bt.setBounds(563, 35, 89, 25);
+		add(main_point_charge_bt);
 
 		// 이건 제목으로밖에 안쓰기 때문에 생성만.
 		JLabel lblNewLabel = new JLabel("절찬 상영중");
@@ -122,8 +122,7 @@ public class Main_login extends JPanel {
 		ticketing_bt.setBounds(237, 677, 122, 49);
 		this.add(ticketing_bt);
 
-		
-		//하단의 액션리스너 , 매점팀.
+		// 하단의 액션리스너 , 매점팀.
 		JButton snack_bt = new JButton("매점");
 		snack_bt.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 		snack_bt.setBounds(412, 677, 122, 49);
@@ -131,47 +130,50 @@ public class Main_login extends JPanel {
 
 		setVisible(true);
 
-		//이미지 경로, images 파일에 밑의것이 있어야 활성화된다.
+		// 이미지 경로, images 파일에 밑의것이 있어야 활성화된다.
 		ImageIcon originalIcon = new ImageIcon("src/images/반지의제왕.png");
 		Image originalImage = originalIcon.getImage();
-		Image resizedImage = originalImage.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),  java.awt.Image.SCALE_SMOOTH);
+		Image resizedImage = originalImage.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
 		ImageIcon resizedIcon = new ImageIcon(resizedImage);
-		
+
 		ImageIcon originalIcon1 = new ImageIcon("src/images/해리포터.png");
 		Image originalImage1 = originalIcon1.getImage();
-		Image resizedImage1 = originalImage1.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),  java.awt.Image.SCALE_SMOOTH);
+		Image resizedImage1 = originalImage1.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
 		ImageIcon resizedIcon1 = new ImageIcon(resizedImage1);
-		
+
 		ImageIcon originalIcon2 = new ImageIcon("src/images/뽀로로.png");
 		Image originalImage2 = originalIcon2.getImage();
-		Image resizedImage2 = originalImage2.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),  java.awt.Image.SCALE_SMOOTH);
+		Image resizedImage2 = originalImage2.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
 		ImageIcon resizedIcon2 = new ImageIcon(resizedImage2);
 
 		ImageIcon originalIcon3 = new ImageIcon("src/images/엘리멘탈.jpg");
 		Image originalImage3 = originalIcon3.getImage();
-		Image resizedImage3 = originalImage3.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),  java.awt.Image.SCALE_SMOOTH);
+		Image resizedImage3 = originalImage3.getScaledInstance(btnNewButton.getWidth(), btnNewButton.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
 		ImageIcon resizedIcon3 = new ImageIcon(resizedImage3);
-		
+
 		// 포스터이미지 붙이기.
 		btnNewButton.setIcon(resizedIcon);
 		btnNewButton_1.setIcon(resizedIcon1);
 		btnNewButton_2.setIcon(resizedIcon2);
 		btnNewButton_3.setIcon(resizedIcon3);
-		
+
 		// 로고이미지.
 		// 이미지 로딩 및 크기 조절
 		ImageIcon originalIcon4 = new ImageIcon("src/images/logo.png");
 		Image originalImage4 = originalIcon4.getImage();
-		int lblWidth = logo.getWidth();  // 라벨의 크기를 얻어옵니다.
+		int lblWidth = logo.getWidth(); // 라벨의 크기를 얻어옵니다.
 		int lblHeight = logo.getHeight();
-		Image resizedImage4 = originalImage4.getScaledInstance(lblWidth, lblHeight,  java.awt.Image.SCALE_SMOOTH);
+		Image resizedImage4 = originalImage4.getScaledInstance(lblWidth, lblHeight, java.awt.Image.SCALE_SMOOTH);
 
 		// 조정된 이미지를 이용하여 ImageIcon 객체 생성
 		ImageIcon resizedIcon4 = new ImageIcon(resizedImage4);
 
 		// 라벨에 이미지 아이콘 설정
-		logo.setIcon(resizedIcon4);  // logo_lbl은 JLabel 객체입니다.
-
+		logo.setIcon(resizedIcon4); // logo_lbl은 JLabel 객체입니다.
 
 		// 버튼 액션리스너 =================================================
 
@@ -183,17 +185,17 @@ public class Main_login extends JPanel {
 				try {
 					MobileTicket_VO m_vo = new MobileTicket_VO();
 					Protocol p = new Protocol();
-					
+
 					m_vo.setCust_id(signin.cvo.getCust_id());
 					p.setM_vo(m_vo);
-					p.setCmd(104);			
-					
+					p.setCmd(104);
+
 					signin.out.writeObject(p);
 					signin.out.flush();
-				
+
 					signin.card.show(signin.pg, "t_list");
 				} catch (Exception e2) {
-					
+
 				}
 			}
 		});
@@ -203,7 +205,7 @@ public class Main_login extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//마이페이지 화면단 구성 필요!!!******
+				// 마이페이지 화면단 구성 필요!!!******
 
 			}
 		});
@@ -213,71 +215,66 @@ public class Main_login extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		
+
 		// 4. 포인트충전
 		main_point_charge_bt.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        PointChargeDialog dialog = new PointChargeDialog((Frame) SwingUtilities.getWindowAncestor(Main_login.this));
-		        dialog.setPointChargeListener(new PointChargeListener() {
-		            public void onPointCharge(int amount) {
-		            	
-		                // PointChargeDialog에서 선택한 포인트
-		                System.out.println("충전된 포인트: " + amount);
-		                
+			public void actionPerformed(ActionEvent e) {
+				PointChargeDialog dialog = new PointChargeDialog(
+						(Frame) SwingUtilities.getWindowAncestor(Main_login.this));
+				dialog.setPointChargeListener(new PointChargeListener() {
+					public void onPointCharge(int amount) {
+
+						// PointChargeDialog에서 선택한 포인트
+						System.out.println("충전된 포인트: " + amount);
+
 						try {
 							Pay_VO p_vo = new Pay_VO();
 							Protocol p = new Protocol();
-							
-							p_vo.setCust_id(signin.p.getC_vo().getCust_id());
+
+							p_vo.setCust_id(signin.cvo.getCust_id());
 							p_vo.setPoint(amount);
 							p.setP_vo(p_vo);
 							p.setCmd(102);
-							
+
 							signin.out.writeObject(p);
 							signin.out.flush();
-							
-		                    signin.p.getC_vo().setPoint(signin.p.getC_vo().getPoint() + amount);
-		                    login_point_label.setText("잔여포인트 : " + signin.p.getC_vo().getPoint());
+
+							signin.cvo.setPoint(signin.cvo.getPoint() + amount);
+							login_point_label.setText("잔여포인트 : " + signin.cvo.getPoint());
 						} catch (Exception e2) {
 							e2.printStackTrace();
 						}
-		            }
-		        });
-		        dialog.setVisible(true);
-		    }
+					}
+				});
+				dialog.setVisible(true);
+			}
 		});
 
-		
-		
-		
 		// 5. 각 포스터 누르면 매표소로 각 이름 체크되서가져가기.
 		btnNewButton.addActionListener(new ActionListener() {
 
 			@Override
-			
+
 			public void actionPerformed(ActionEvent e) {
-				
-			
+
 			}
 		});
 
 		btnNewButton_1.addActionListener(new ActionListener() {
 
 			@Override
-			
+
 			public void actionPerformed(ActionEvent e) {
-				
-			
+
 			}
 		});
 
 		btnNewButton_2.addActionListener(new ActionListener() {
 
 			@Override
-		
+
 			public void actionPerformed(ActionEvent e) {
-				
-			
+
 			}
 		});
 
@@ -285,30 +282,28 @@ public class Main_login extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-			
+
 			}
 		});
-		//여기까지 5번 
-		
-		
-		//6. 빠른예매 버튼 누르면 바로 매표소로 
+		// 여기까지 5번
+
+		// 6. 빠른예매 버튼 누르면 바로 매표소로
 		ticketing_bt.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				try {
-					
+
 					sign_in.card.show(signin.pg, "to_main");
 					sign_in.to_main.model1.setRowCount(0);
 					System.out.println("메인에서 홈으로 버튼 누르면 초기화,여긴홈");
 					System.out.println("빠른예매버튼 눌러 매표소 전환 성공");
-					//영화목록은 성공, 건들지말자.
+					// 영화목록은 성공, 건들지말자.
 					Protocol p = new Protocol();
 					p.setCmd(301);
 					sign_in.out.writeObject(p);
-					sign_in.out.flush();			
+					sign_in.out.flush();
 					System.out.println("cmd보냈나");
 
 				} catch (Exception e2) {
@@ -317,21 +312,14 @@ public class Main_login extends JPanel {
 			}
 		});
 
-		//매점버튼 클릭시 매점화면으로 이동. 이 부분은 우선 매점팀 
+		// 매점버튼 클릭시 매점화면으로 이동. 이 부분은 우선 매점팀
 		snack_bt.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				sign_in.card.show(sign_in.pg, "snack");
 				System.out.println("매점버튼 눌러 매점 전환 성공");
-				
 			}
 		});
-		
-		
-
-		
 	}
-	
-	}
-	
+}
