@@ -7,10 +7,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -28,6 +31,7 @@ import com.toedter.calendar.JCalendar;
 
 import c_loginout.Sign_in;
 import movie_server.DAO;
+import movie_server.MobileTicket_VO;
 import movie_server.Protocol;
 import movie_server.TicketBox_VO;
 
@@ -36,44 +40,40 @@ import movie_server.TicketBox_VO;
 public class Ticket_office_main extends JPanel {
 	// 필요한 것들 선언하자
 	Sign_in sign_in;
-	/*Socket s;
-	ObjectOutputStream out;
-	ObjectInputStream in;
-	Server_book server;
-	String ip;*/
+
 	String selectedMovieName;
 	JLabel price1, price2,lblNewLabel_10_3,lblNewLabel,lblNewLabel_1,lblNewLabel_2,lblNewLabel_2_1,lblNewLabel_2_1_1,lblNewLabel_2_1_1_1,
 	lblNewLabel_3,lblNewLabel_4,lblNewLabel_5,lblNewLabel_5_1,lblNewLabel_6,lblNewLabel_7,lblNewLabel_7_1,lblNewLabel_7_1_1,lblNewLabel_7_1_1_1,
 	lblNewLabel_8,lblNewLabel_8_1,lblNewLabel_8_2,lblNewLabel_8_2_1,lblNewLabel_9,lblNewLabel_10,lblNewLabel_10_1,lblNewLabel_10_2;
 	String price_ad, price_ch;
 	
+
 	 Icon theater ;
      String adultCount,childCount, date, time, amount ,room;
      //매표소 > 좌석창으로 값 보내기 위한 변수선언
 	
-	JTable table_1, table_2, table_3;
+	public JTable table_1,table_2,table_3;
 	public DefaultTableModel model1,model2,model3;
+	
+	int aCount, cCount;
+	//콤보박스 인원을 체크하기위한 임의변수선언.
 
+	Date now = new Date();
 
+	
 
 	JScrollPane jsp1, jsp2, jsp3;
 	JButton btnNewButton_1,btnNewButton_2;
+	private JButton more_bt;
 	JComboBox<String> comboBox, comboBox_1;
 	JCalendar calendar;
+	Protocol p;
 	
 	
 	public Ticket_office_main(Sign_in signin) {
 		this.sign_in = signin;
-
+		
 		this.setLayout(null);
-
-		/*lblNewLabel = new JLabel("잔여포인트");
-		lblNewLabel.setBounds(610, 22, 69, 15);
-		this.add(lblNewLabel);
-
-		lblNewLabel_1 = new JLabel("00000");
-		lblNewLabel_1.setBounds(681, 22, 57, 15);
-		this.add(lblNewLabel_1);*/
 
 		lblNewLabel_2 = new JLabel("[영화 선택]");
 		lblNewLabel_2.setBounds(27, 56, 82, 15);
@@ -118,8 +118,8 @@ public class Ticket_office_main extends JPanel {
 		lblNewLabel_5_1.setBounds(324, 469, 34, 15);
 		this.add(lblNewLabel_5_1);
 
-		String[] a_peo = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-		String[] c_peo = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+		String[] a_peo = { "0", "1", "2", "3", "4", "5"};
+		String[] c_peo = { "0", "1", "2", "3", "4", "5"};
 
 		comboBox = new JComboBox(a_peo);
 		comboBox.setBounds(270, 465, 42, 23);
@@ -225,9 +225,23 @@ public class Ticket_office_main extends JPanel {
 		btnNewButton_2.setBounds(235, 714, 115, 35);
 		this.add(btnNewButton_2);
 
-
 		
-	
+		//[7/11 추가 -지혜 , 영화포스터만 눌러서 들어갈경우, 한 이름밖에 안떠서 
+		//(여러개중에 하나만 자동클릭이 안되어, 한 영화목록만뜨게함)
+		//그래서 이 버튼을 추가해서 이자리에서 다른영화 더 볼수있도록 하기로함. 
+		more_bt = new JButton("+더보기");
+		more_bt.setBounds(100, 50, 95, 22);
+		this.add(more_bt);  //이건 포스터 눌렀을때만 클릭가능하게하고, 빠른예매는 비활성화하기.
+		
+		String adultCountText = lblNewLabel_8_2.getText().replace("명", "");
+	    String childCountText = lblNewLabel_8_2_1.getText().replace("명", "");
+	    aCount = Integer.parseInt(adultCountText);
+	    cCount = Integer.parseInt(childCountText);
+		
+	    
+	    
+		
+		
 		// 예매하기 버튼을 눌렀을경우에 좌석 선택창으로 넘어가진다.
 		// 매표소는 숨겨지고, 좌석확인창을 객체 생성하여 보이게 한다.
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -243,7 +257,7 @@ public class Ticket_office_main extends JPanel {
 			        room = lblNewLabel_10.getText();//매표소의 극장관 겟
 			        
 			        
-			        //빈칸있나없나 확인하려는 
+			        //결제하기로 넘어갈때, 선택한정보 라벨에 빈칸있나없나 확인하려는 
 			        Icon lbl6Text = lblNewLabel_6.getIcon();
 			        String lbl8_2Text = lblNewLabel_8_2.getText();
 			        String lbl8_2_1Text = lblNewLabel_8_2_1.getText();
@@ -337,7 +351,7 @@ public class Ticket_office_main extends JPanel {
 						});
 					} else {
 						// 선택한 날짜가 오늘 이후인 경우
-						SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd");
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd");
 						String formattedDate = dateFormat.format(selectedDate.getTime());
 						lblNewLabel_10_1.setText(formattedDate);
 					}
@@ -406,6 +420,8 @@ public class Ticket_office_main extends JPanel {
 
 		});
 		
+		
+		//table3의 있는 행들을 클릭할때마다 라벨에 붙이기. 
 		table_3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -484,6 +500,10 @@ public class Ticket_office_main extends JPanel {
 		    	lblNewLabel_10_1.setText("");
 		    	lblNewLabel_10_2.setText("");
 		    	lblNewLabel_10_3.setText("");
+		    	comboBox.setSelectedIndex(0);
+				comboBox_1.setSelectedIndex(0);
+				calendar.setDate(new Date());
+				//calendar.setSelectableDateRange(, null);
 		    	try {
 		    		Protocol p = new Protocol();
 		    		p.setCmd(302);
@@ -499,7 +519,56 @@ public class Ticket_office_main extends JPanel {
 		});
 		
 		
+		//[0711] 추가 -지혜
+		more_bt.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//영화포스터만을 눌러서 매표소에 왔을떄 더보기 버튼이 활성화된다. 
+				//더보기 버튼 눌렀을때 영화 목록을 가져오는 메서드 실행. 
+				//cmd (301) 과 동일.
+				try {
+					Protocol p = new Protocol();
+					p.setCmd(301);
+					sign_in.out.writeObject(p);
+					sign_in.out.flush();			
+					System.out.println("더보기cmd보냈나");
+					model1.setRowCount(0);
+					
+					more_bt.setEnabled(false);
+
+					
+				} catch (Exception e2) {
+					
+				}
+				
+				 lblNewLabel_6.setIcon(null);
+				 lblNewLabel_8_2.setText("");
+				 lblNewLabel_8_2_1.setText("");
+				 lblNewLabel_10.setText("");
+				 lblNewLabel_10_1.setText("");
+				 lblNewLabel_10_2.setText("");
+				 lblNewLabel_10_3.setText("");
+				 table_1.clearSelection();
+				 table_2.clearSelection();
+				 table_3.clearSelection();
+				 comboBox.setSelectedIndex(0);
+				 comboBox_1.setSelectedIndex(0);
+				 //calendar.setDate(new Date());
+			}
+		});
 		
+		
+	table_3.addMouseListener( new MouseAdapter() {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			  
+			
+			
+			
+		}
+		
+	});
 		
 	}// 액션리스너 및 화면단 마지막 괄호
 
@@ -549,19 +618,39 @@ public class Ticket_office_main extends JPanel {
          for (TicketBox_VO movieTime : movieTimes) {
             
              model3.addRow(new Object[] {movieTime.getStart_time() + " - " + movieTime.getEnd_time()});
+             
+           
+             
+            
          }
+        	 
+         
      }
 	}
 	
 
-
-
-
+	
+	//포스터 선택으로 들어갔을시, 테이블1 초기화후 집어넣기
+	public void updateChoiceTable(TicketBox_VO movieChoice) {
+		DefaultTableModel model = (DefaultTableModel) table_1.getModel();
+		model.setRowCount(0); // 기존 테이블 데이터를 초기화
+			Object[] rowData = { movieChoice.getMovie_name()};
+			model.addRow(rowData);
+		}
 	
 	
-
-
-
-
+	//main_loin에서 빠른예매나 포스터버튼 클릭시, 이 클래스의 more_bt 사용하기 위해서 리턴 선언.
+	public JButton getMoreButton() {
+        return more_bt;
+    }
 	
+
+    public int getAdultCount() {
+        return aCount;
+    }
+
+    public int getChildCount() {
+        return cCount;
+    }
+
 	}  //클래스의 마지막 괄호.

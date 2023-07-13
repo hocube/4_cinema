@@ -26,24 +26,39 @@
 		(#{cust_id}, #{cust_name}, #{point})
 	</insert>
 
-
+	<!-- 로그아웃할때 회원 정보 Login_info에 데이터 삭제 -->
+	<update id="logout" parameterType="String">
+		DELETE FROM login_info
+		WHERE cust_id = #{cust_id}
+	</update>
+	
 	<!-- 아이디 중복 체크 (탈퇴한 회원의 아이디까지 사용할 수 없게) -->
 	<select id="idchk" resultType="int"
 		parameterType="String">
 		SELECT COUNT(*) FROM customer WHERE cust_ID = #{cust_ID}
 	</select>
 
-	<!-- <select id="custOne" parameterType="String" resultType="mybatis.com.ict.edu.VO"> 
-		select * from customer where custid = #{custid} </select> <insert id="custIns" 
-		parameterType="mybatis.com.ict.edu.VO"> insert into customer(custid, name, 
-		address, phone) values(customer_seq.nextval,#{name},#{address},#{phone}) 
-		</insert> <delete id="custDel" parameterType="mybatis.com.ict.edu.VO"> delete 
-		from customer where custid = #{custid} </delete> <update id="custUpdate" 
-		parameterType="mybatis.com.ict.edu.VO"> update customer set name=#{name}, 
-		address=#{address}, phone=#{phone} where custid = #{custid} </update> -->
-
-
-
+	<!-- 마이페이지 비밀번호 변경-->
+   <update id="changepwd" parameterType="movie_server.CustomerVO">
+      update customer set cust_password = #{cust_password} where cust_id = #{cust_id}
+   </update>
+   
+   <!-- 마이페이지 전화 번호 변경 -->
+   <update id="changephonenum" parameterType="movie_server.CustomerVO">
+      update customer set cust_phone = #{cust_phone} where cust_id = #{cust_id}
+   </update>
+   
+   <!-- 탈퇴 (DELETE_YN 1로 수정)-->
+   <update id="memberdelete" parameterType="movie_server.CustomerVO">
+      update customer set delete_yn = #{delete_yn} where cust_id = #{cust_id}
+   </update>
+   
+   <!-- 탈퇴 (login_info에서 삭제) -->
+   <update id="custlogout" parameterType="movie_server.CustomerVO">
+      DELETE FROM login_info
+      WHERE cust_id = #{cust_id}
+   </update>
+	
 	<!-- 지호 -->
 	<!-- Customer 에서 현재 로그인 한 회원정보 가져오기 -->
    <select id="getMemberLogin" resultType="movie_server.CustomerVO">
@@ -113,34 +128,23 @@
 
 
 
-
-
-
 	<!-- 지혜 -->
 	<!--영화목록 전체 가져오기 -->
 	<select id="movieList" resultType="movie_server.TicketBox_VO">
 		select movie_name from movie
 	</select>
 
-	<!-- 버튼으로 클릭한 값과 동일한 영화 정보를 가져오는 쿼리문
-	<select id="getMovieByName" parameterType="java.lang.String"
-		resultType="movie_server.TicketBox_VO">
-		SELECT *
-		FROM movie
-		WHERE movie_name = #{movieName}
-	</select> -->
-
-
-
 	<!-- 상영시간표 불러오기 1)시작 시간과 2)종료시간, 3)두개의 시간으로 검색 -->
 	<select id="stimeList" resultType="movie_server.TicketBox_VO">
 		select start_time from
 		movie_schedule
 	</select>
+	
 	<select id="etimeList" resultType="movie_server.TicketBox_VO">
 		select end_time from
 		movie_schedule
 	</select>
+	
 	<select id="getMovieTimes" parameterType="java.lang.String"
 		resultType="movie_server.TicketBox_VO">
 		SELECT start_time, end_time
@@ -149,7 +153,21 @@
 		movie_name = #{movieTitle}
 	</select>
 
-	<!-- <select id="getMovieByName" resultType="movie_server.TicketBox_VO"> 
-		SELECT * FROM movie WHERE movie_name = #{movie_name} </select> -->
-
+	<!--포스터를 클릭한 영화이름을 ticket_office_main table1에 가져오기 -->
+	<select id="getMovieChoice" parameterType="String"
+		resultType="movie_server.TicketBox_VO">
+		SELECT movie_name 
+		FROM movie
+		WHERE movie_name  = #{movie_name }
+	</select>
+	
+	<!-- 민서 -->
+	<!-- 회원정보 전체 출력  -->
+	<select id="custList" resultType="movie_server.CustomerVO">
+		 select * from customer order by cust_id
+	</select>
+	<!-- custid로 회원정보 삭제 -->
+	<delete id="custdelete" parameterType="String">
+		delete from customer where cust_id = #{cust_id}
+	</delete>
 </mapper>

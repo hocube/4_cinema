@@ -5,15 +5,16 @@ import java.awt.Frame;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import movie_server.LoginInfo_VO;
 import movie_server.MobileTicket_VO;
 import movie_server.Pay_VO;
 import movie_server.Protocol;
@@ -25,10 +26,6 @@ public class Main_login extends JPanel {
 	private JButton main_point_charge_bt;
 
 	Sign_in sign_in;
-	// Movie_chart_view1 v1 = new Movie_chart_view1(); //두개 안씀
-	// Movie_chart_view2 v2 = new Movie_chart_view2();
-
-	// CardLayout card = new CardLayout();
 
 	public Main_login(Sign_in signin) {
 
@@ -92,7 +89,7 @@ public class Main_login extends JPanel {
 		// 이건 제목으로밖에 안쓰기 때문에 생성만.
 		JLabel lblNewLabel = new JLabel("절찬 상영중");
 		lblNewLabel.setFont(new Font("맑은 고딕", Font.BOLD, 30));
-		lblNewLabel.setBounds(12, 316, 194, 41);
+		lblNewLabel.setBounds(48, 316, 194, 41);
 		this.add(lblNewLabel);
 
 		// 영화 포스터 버튼들. 각 포스터 버튼 눌렀을때, 매표소로 넘어가고, 클릭한 해당 버튼의
@@ -105,18 +102,17 @@ public class Main_login extends JPanel {
 		this.add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton();
-		btnNewButton_1.setBounds(211, 381, 131, 210);
+		btnNewButton_1.setBounds(223, 382, 131, 210);
 		this.add(btnNewButton_1);
 
 		JButton btnNewButton_2 = new JButton();
-		btnNewButton_2.setBounds(384, 381, 131, 210);
+		btnNewButton_2.setBounds(402, 382, 131, 210);
 		this.add(btnNewButton_2);
 
 		JButton btnNewButton_3 = new JButton();
-		btnNewButton_3.setBounds(563, 381, 131, 210);
+		btnNewButton_3.setBounds(585, 382, 131, 210);
 		this.add(btnNewButton_3);
 
-		// 하단의 액션리스너
 		JButton ticketing_bt = new JButton("빠른 예매");
 		ticketing_bt.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 		ticketing_bt.setBounds(237, 677, 122, 49);
@@ -206,13 +202,51 @@ public class Main_login extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// 마이페이지 화면단 구성 필요!!!******
+				// 화면단 구성 완
+				// 안에 버튼 활성화 시킨다음에 구성하겟음
+				String mypage_inpw = JOptionPane.showInputDialog("비밀번호를 입력해주세요"); // 비밀번호를 입력받고 맞아야 마이페이지에 들어갈수 있다
+				System.out.println("마이페이지 입장 비밀번호 입력: " + mypage_inpw);
 
+				if (mypage_inpw == null) {
+					// 아무 작업도 수행하지 않고 리턴하여 종료합니다.
+					return;
+				}
+
+				if (mypage_inpw.equals(signin.cvo.getCust_password())) {
+					signin.card.show(signin.pg, "mypage");
+				} else {
+					JOptionPane.showMessageDialog(null, "비밀번호가 틀렸습니다.", "알림", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 
 		// 3. 로그아웃 버튼
 		sign_out_bt.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
+				int r = JOptionPane.showConfirmDialog(getParent(), "로그아웃 하시겠습니까 ?", "로그아웃", JOptionPane.YES_NO_OPTION);
+				if (r == 0) {
+
+					try {
+						System.out.println("다이얼로그 값 받기 완");
+
+						LoginInfo_VO l_vo = new LoginInfo_VO();
+						Protocol p = new Protocol();
+						System.out.println("로그아웃 프로토콜 생성완");
+
+						// l_vo.setCust_id(signin.p.getC_vo().getCust_id());
+						l_vo.setCust_id(signin.cvo.getCust_id());
+						p.setL_vo(l_vo);
+						p.setCmd(504);
+
+						signin.out.writeObject(p);
+						signin.out.flush();
+
+					} catch (Exception e2) {
+						System.out.println(e2);
+					}
+					// signin.card.show(signin.pg, "sign_in");
+				}
 			}
 		});
 
@@ -251,12 +285,30 @@ public class Main_login extends JPanel {
 		});
 
 		// 5. 각 포스터 누르면 매표소로 각 이름 체크되서가져가기.
+		// btnNewButton~btnNewButton_3까지[07/11 추가수정완료] -지혜
 		btnNewButton.addActionListener(new ActionListener() {
 
 			@Override
 
 			public void actionPerformed(ActionEvent e) {
+				String m_1 = "반지의제왕";
 
+				try {
+					TicketBox_VO t_vo = new TicketBox_VO();
+					Protocol p = new Protocol();
+					t_vo.setMovie_name(m_1);
+					p.setT_vo(t_vo);
+					p.setCmd(303);
+					System.out.println("303로 cmd 보냈니?");
+
+					signin.out.writeObject(p);
+					signin.out.flush();
+
+					sign_in.card.show(sign_in.pg, "to_main");
+					sign_in.to_main.getMoreButton().setEnabled(true);
+				} catch (Exception e2) {
+
+				}
 			}
 		});
 
@@ -265,6 +317,24 @@ public class Main_login extends JPanel {
 			@Override
 
 			public void actionPerformed(ActionEvent e) {
+				String m_2 = "해리포터와비밀의방";
+
+				try {
+					TicketBox_VO t_vo = new TicketBox_VO();
+					Protocol p = new Protocol();
+					t_vo.setMovie_name(m_2);
+					p.setT_vo(t_vo);
+					p.setCmd(303);
+					System.out.println("303로 cmd 보냈니?");
+
+					signin.out.writeObject(p);
+					signin.out.flush();
+
+					sign_in.card.show(sign_in.pg, "to_main");
+					sign_in.to_main.getMoreButton().setEnabled(true);
+				} catch (Exception e2) {
+
+				}
 
 			}
 		});
@@ -274,6 +344,24 @@ public class Main_login extends JPanel {
 			@Override
 
 			public void actionPerformed(ActionEvent e) {
+				String m_3 = "뽀로로";
+
+				try {
+					TicketBox_VO t_vo = new TicketBox_VO();
+					Protocol p = new Protocol();
+					t_vo.setMovie_name(m_3);
+					p.setT_vo(t_vo);
+					p.setCmd(303);
+					System.out.println("303로 cmd 보냈니?");
+
+					signin.out.writeObject(p);
+					signin.out.flush();
+
+					sign_in.card.show(sign_in.pg, "to_main");
+					sign_in.to_main.getMoreButton().setEnabled(true);
+				} catch (Exception e2) {
+
+				}
 
 			}
 		});
@@ -282,44 +370,67 @@ public class Main_login extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String m_4 = "엘리멘탈";
+
+				try {
+					TicketBox_VO t_vo = new TicketBox_VO();
+					Protocol p = new Protocol();
+					t_vo.setMovie_name(m_4);
+					p.setT_vo(t_vo);
+					p.setCmd(303);
+					System.out.println("303로 cmd 보냈니?");
+
+					signin.out.writeObject(p);
+					signin.out.flush();
+
+					sign_in.card.show(sign_in.pg, "to_main");
+					sign_in.to_main.getMoreButton().setEnabled(true);
+				} catch (Exception e2) {
+
+				}
 
 			}
 		});
-		// 여기까지 5번
+		// 여기까지 영화포스터 버튼
 
-		// 6. 빠른예매 버튼 누르면 바로 매표소로
+		// 6. 빠른예매 버튼 누르면 바로 매표소로 -지혜
 		ticketing_bt.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-
 					sign_in.card.show(signin.pg, "to_main");
+
 					sign_in.to_main.model1.setRowCount(0);
 					System.out.println("메인에서 홈으로 버튼 누르면 초기화,여긴홈");
 					System.out.println("빠른예매버튼 눌러 매표소 전환 성공");
 					// 영화목록은 성공, 건들지말자.
+
 					Protocol p = new Protocol();
 					p.setCmd(301);
 					sign_in.out.writeObject(p);
 					sign_in.out.flush();
 					System.out.println("cmd보냈나");
 
+					sign_in.to_main.getMoreButton().setEnabled(false);
 				} catch (Exception e2) {
 					e2.printStackTrace();
 				}
+
 			}
 		});
 
-		// 매점버튼 클릭시 매점화면으로 이동. 이 부분은 우선 매점팀
+		// 매점으로 버튼 클릭시 매점으로 이동
+
 		snack_bt.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sign_in.card.show(sign_in.pg, "snack");
-				System.out.println("매점버튼 눌러 매점 전환 성공");
+				sign_in.card.show(signin.pg, "snack1");
+
 			}
 		});
+
 	}
 }

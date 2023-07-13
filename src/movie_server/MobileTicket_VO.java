@@ -6,7 +6,7 @@ import java.sql.Date;
 public class MobileTicket_VO implements Serializable{
 	
 	private String movie_id, cust_id, movie_name, theater_id, movie_date, start_time, end_time, theater_seat;
-	private int ticket_num, ticket_canceled;
+	private int ticket_num;
 	
 	public String getMovie_id() {
 		return movie_id;
@@ -62,10 +62,4 @@ public class MobileTicket_VO implements Serializable{
 	public void setTicket_num(int ticket_num) {
 		this.ticket_num = ticket_num;
 	}
-	public int getTicket_canceled() {
-		return ticket_canceled;
-	}
-	public void setTicket_canceled(int ticket_canceled) {
-		this.ticket_canceled = ticket_canceled;
-	}	
 }

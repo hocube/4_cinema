@@ -26,6 +26,8 @@ public class Protocol implements Serializable{
 	int cmd;
 	int result;
 	String msg;
+	// 로그아웃할때 시험삼아해보지
+	String result_st;
 	
 	List<CustomerVO> c_list;
 	CustomerVO c_vo;	
@@ -38,8 +40,24 @@ public class Protocol implements Serializable{
 	TicketBox_VO t_vo;
 	List<Seat_VO> s_list;
 	
+	LoginInfo_VO l_vo;
+	
+	List<CustomerVO> ad_clist; // 전체보기 목록 : DAO에서 return한 값 변수이름으로 선언하고 게터세터
+	String del_id;
 	
 	
+	public List<CustomerVO> getAd_clist() {
+		return ad_clist;
+	}
+	public void setAd_clist(List<CustomerVO> ad_clist) {
+		this.ad_clist = ad_clist;
+	}
+	public String getDel_id() {
+		return del_id;
+	}
+	public void setDel_id(String del_id) {
+		this.del_id = del_id;
+	}
 	public int getCmd() {
 		return cmd;
 	}
@@ -106,5 +124,16 @@ public class Protocol implements Serializable{
 	public void setS_list(List<Seat_VO> s_list) {
 		this.s_list = s_list;
 	}
-	
+	public String getResult_st() {
+		return result_st;
+	}
+	public void setResult_st(String result_st) {
+		this.result_st = result_st;
+	}
+	public LoginInfo_VO getL_vo() {
+		return l_vo;
+	}
+	public void setL_vo(LoginInfo_VO l_vo) {
+		this.l_vo = l_vo;
+	}
 }

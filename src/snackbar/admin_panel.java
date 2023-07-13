@@ -2,6 +2,8 @@ package snackbar;
 
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,7 +33,7 @@ public class admin_panel extends JPanel {
 			btnNewButton_2.setBounds(405, 230, 180, 325);
 			this.add(btnNewButton_2);
 			
-			JButton btnNewButton_3 = new JButton("매점 관리");
+			JButton btnNewButton_3 = new JButton("발주 관리");
 			btnNewButton_3.setBounds(598, 230, 180, 325);
 			this.add(btnNewButton_3);
 			
@@ -55,6 +57,38 @@ public class admin_panel extends JPanel {
 			admin.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 			admin.setBounds(330, 680, 122, 49);
 			this.add(admin);
+			
+			btnNewButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					sign_in.card.show(sign_in.pg, "c_admin");
+					
+				}
+			});
+			
+			btnNewButton_1.addActionListener(new ActionListener() {				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					sign_in.card.show(sign_in.pg, "o_admin");
+				}
+			});
+			
+			btnNewButton_2.addActionListener(new ActionListener() {				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					sign_in.card.show(sign_in.pg, "m_admin");
+				}
+			});
+			
+			btnNewButton_3.addActionListener(new ActionListener() {				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					sign_in.card.show(sign_in.pg, "s_admin");
+				}
+			});
+			
+			
 		}
 	}
 
