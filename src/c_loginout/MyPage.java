@@ -121,9 +121,14 @@ public class MyPage extends JPanel {
 					String ch_pw = JOptionPane.showInputDialog("변경할 비밀번호를 입력해주세요");
 					System.out.println("마이페이지 입장 비밀번호 입력" + ch_pw);
 					
-					try {
-						// 4글자 미만 수정 안됨.
-						if (ch_pw == null || ch_pw.length() < 4) {
+					// 취소 버튼을 누르면 아무 작업도 수행하지 않고 반복문을 종료합니다.
+		            if (ch_pw == null) {
+		                break;
+		            }
+
+		            try {
+		                // 4글자 미만 수정 안됨.
+		                if (ch_pw.length() < 4) {
 							JOptionPane.showMessageDialog(null, "비밀번호를 4글자 이상 입력해주세요.", "알림",
 									JOptionPane.WARNING_MESSAGE);
 						} else {
@@ -166,9 +171,14 @@ public class MyPage extends JPanel {
 				while (true) {
 					String ch_phone = JOptionPane.showInputDialog("변경할 핸드폰 번호를 입력해주세요");
 
-					try {
-						// 6글자 미만 수정 안됨.
-						if (ch_phone == null || ch_phone.length() < 6) {
+					// 취소 버튼을 누르면 아무 작업도 수행하지 않고 반복문을 종료합니다.
+		            if (ch_phone == null) {
+		                break;
+		            }
+
+		            try {
+		                // 4글자 미만 수정 안됨.
+		                if (ch_phone.length() < 6) {
 							JOptionPane.showMessageDialog(null, "핸드폰 번호를 정확하게 입력해주세요.", "알림",
 									JOptionPane.WARNING_MESSAGE);
 						} else {

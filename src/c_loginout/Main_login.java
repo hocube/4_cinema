@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
@@ -196,28 +197,57 @@ public class Main_login extends JPanel {
 			}
 		});
 
+//		2. 마이페이지 버튼 (혹시 오류나면 이걸로 수정)
+//		mypage_bt.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// 마이페이지 화면단 구성 필요!!!******
+//				// 화면단 구성 완
+//				// 안에 버튼 활성화 시킨다음에 구성하겟음
+//				String mypage_inpw = JOptionPane.showInputDialog("비밀번호를 입력해주세요"); // 비밀번호를 입력받고 맞아야 마이페이지에 들어갈수 있다
+//				System.out.println("마이페이지 입장 비밀번호 입력: " + mypage_inpw);
+//
+//				if (mypage_inpw == null) {
+//					// 아무 작업도 수행하지 않고 리턴하여 종료합니다.
+//					return;
+//				}
+//
+//				if (mypage_inpw.equals(signin.cvo.getCust_password())) {
+//					signin.card.show(signin.pg, "mypage");
+//				} else {
+//					JOptionPane.showMessageDialog(null, "비밀번호가 틀렸습니다.", "알림", JOptionPane.ERROR_MESSAGE);
+//				}
+//			}
+//		});
+		
 		// 2. 마이페이지 버튼
 		mypage_bt.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        JPasswordField passwordField = new JPasswordField();
+		        int option = JOptionPane.showOptionDialog(
+		                null,
+		                passwordField,
+		                "비밀번호를 입력해주세요",
+		                JOptionPane.OK_CANCEL_OPTION,
+		                JOptionPane.PLAIN_MESSAGE,
+		                null,
+		                null,
+		                null);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// 마이페이지 화면단 구성 필요!!!******
-				// 화면단 구성 완
-				// 안에 버튼 활성화 시킨다음에 구성하겟음
-				String mypage_inpw = JOptionPane.showInputDialog("비밀번호를 입력해주세요"); // 비밀번호를 입력받고 맞아야 마이페이지에 들어갈수 있다
-				System.out.println("마이페이지 입장 비밀번호 입력: " + mypage_inpw);
+		        if (option == JOptionPane.OK_OPTION) {
+		            char[] password = passwordField.getPassword();
+		            String mypage_inpw = new String(password);
+		            System.out.println("마이페이지 입장 비밀번호 입력: " + mypage_inpw);
 
-				if (mypage_inpw == null) {
-					// 아무 작업도 수행하지 않고 리턴하여 종료합니다.
-					return;
-				}
-
-				if (mypage_inpw.equals(signin.cvo.getCust_password())) {
-					signin.card.show(signin.pg, "mypage");
-				} else {
-					JOptionPane.showMessageDialog(null, "비밀번호가 틀렸습니다.", "알림", JOptionPane.ERROR_MESSAGE);
-				}
-			}
+		            if (mypage_inpw.equals(signin.cvo.getCust_password())) {
+		                signin.card.show(signin.pg, "mypage");
+		            } else {
+		                JOptionPane.showMessageDialog(null, "비밀번호가 틀렸습니다.", "알림", JOptionPane.ERROR_MESSAGE);
+		            }
+		        }
+		    }
 		});
 
 		// 3. 로그아웃 버튼
