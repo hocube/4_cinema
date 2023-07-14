@@ -243,8 +243,43 @@ public class DAO {
 	// 민서
 	public static int getDeleteresult(String dID) {
 		int result = getSession().delete("custdelete", dID);
-		System.out.println("mapper갔다옴");
 		ss.commit();
 		return result;
 	}
+
+	public static List<CustomerVO> getCustOne(String sId) {
+		List<CustomerVO> list = null;
+		list = getSession().selectList("custone", sId);
+		return list;
+	}
+
+	public static int getAdminAddresult(String aID) {
+		int result = getSession().update("adminadd", aID);
+		ss.commit();
+		return result;
+	}
+
+	public static int getChangInfoAd(CustomerVO chvo) {
+		int result = getSession().update("changeinfo", chvo);
+		ss.commit();
+		return result;
+	}
+
+	// 득윤
+	public static int getM_movieDelete(String movie_id) {
+		int result = getSession().delete("m_movieDelete", movie_id);
+		System.out.println("movie 삭제");
+		ss.commit();
+		return result;
+	}
+
+	public static List<M_movieVO> getMMsList() {
+		System.out.println("DAO 지나갑니다");
+		List<M_movieVO> list = null;
+
+		list = getSession().selectList("m_mslist");
+		return list;
+
+	}
+
 }

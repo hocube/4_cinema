@@ -11,12 +11,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import c_loginout.Sign_in;
+import movie_server.LoginInfo_VO;
+import movie_server.Protocol;
 
-public class admin_panel extends JPanel {
+public class Admin_panel extends JPanel {
 	Sign_in sign_in;
 
 		
-		public admin_panel(Sign_in signin) {
+		public Admin_panel(Sign_in signin) {
 			this.sign_in = signin;
 			
 			this.setLayout(null);
@@ -53,10 +55,10 @@ public class admin_panel extends JPanel {
 			logo.setIcon(resizedIcon4);
 			
 			
-			JButton admin = new JButton("홈으로");
-			admin.setFont(new Font("맑은 고딕", Font.BOLD, 16));
-			admin.setBounds(330, 680, 122, 49);
-			this.add(admin);
+			JButton adminout = new JButton("로그아웃");
+			adminout.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+			adminout.setBounds(330, 680, 122, 49);
+			this.add(adminout);
 			
 			btnNewButton.addActionListener(new ActionListener() {
 				
@@ -88,7 +90,28 @@ public class admin_panel extends JPanel {
 				}
 			});
 			
+			adminout.addActionListener(new ActionListener() {			
+				@Override
+				public void actionPerformed(ActionEvent e) {
+							try {
+								System.out.println("다이얼로그 값 받기 완");
+
+								LoginInfo_VO l_vo = new LoginInfo_VO();
+								Protocol p = new Protocol();
+								System.out.println("로그아웃 프로토콜 생성완");
+
+								l_vo.setCust_id(signin.cvo.getCust_id());
+								p.setL_vo(l_vo);
+								p.setCmd(504);
+
+								signin.out.writeObject(p);
+								signin.out.flush();
+
+							} catch (Exception e2) {
+								System.out.println(e2);
+							}
+						}					
+			});
 			
 		}
 	}
-

@@ -170,4 +170,26 @@
 	<delete id="custdelete" parameterType="String">
 		delete from customer where cust_id = #{cust_id}
 	</delete>
+	<select id="custone" parameterType="String" 
+			resultType="movie_server.CustomerVO">
+		 select * from customer where cust_id = #{cust_id}
+	</select>
+	<update id="adminadd" parameterType="String">
+		update customer set admin_yn=1 where cust_id=#{cust_id}
+	</update>
+	<update id="changeinfo" parameterType="movie_server.CustomerVO">
+		update customer 
+		set cust_name = #{cust_name}, cust_birth = #{cust_birth}
+        where cust_id = #{cust_id};
+	</update>
+	
+	<!-- 득윤 -->
+	<!-- moiveid로 영화정보 삭제 -->
+	<delete id="m_movieDelete" parameterType="String">
+		delete from movie_schedule where movie_id = #{movie_id}
+	</delete>
+<!-- 영화 스케쥴표 전체보기 -->
+	<select id="m_mslist" resultType="movie_server.M_movieVO">
+		SELECT * FROM movie_schedule order by movie_id
+	</select>
 </mapper>

@@ -112,26 +112,44 @@ public class CP_Client extends Thread{
                      	break;		
                      	//민서
                      case 401: // 전체보기 요청
-                    	// System.out.println("401 요청 받음");
-                    	 List<CustomerVO> ad_clist = DAO.getList(); //고객정보 전체 목록
-                    	 p.setAd_clist(ad_clist);
+                     	 List<CustomerVO> ad_clist = DAO.getList(); //고객정보 전체 목록
+                     	 p.setAd_clist(ad_clist);
+                     	 out.writeObject(p); // 요청한게 Sign_in을 상속받은 패널의 프로토콜이므로 받을때 sign_in으로 간다
+                     	 out.flush();
+                     	break;
+                      case 402: // 회원정보 삭제
+                     	 String d_ID = p.getDel_id(); // 프로토콜로 받은 삭제할 아이디 변수에 저장
+                     	 int d_result = DAO.getDeleteresult(d_ID);// DAO로 sql실행하고 나온 정보(delete 결과는 int)를 저장;
+                     	 p.setResult(d_result); // 정보는 프로토콜을 통해 Sign_in으로 보냄 
+                     	 out.writeObject(p);
+                     	 out.flush();
+                     	 break;
+                      case 403: //회원정보 ID로 검색
+                     	 String o_ID = p.getDel_id(); //고객 1명의 정보를 select할 쿼리문 조건의 cust_id 저장
+                     	 List<CustomerVO> ad_onelist = DAO.getCustOne(o_ID);
+                     	 p.setAd_clist(ad_onelist);
+                     	 out.writeObject(p);
+                     	 out.flush();
+                     	 break;
+                      case 404: // 관리자 권한 추가
+                     	 String add_ID = p.getDel_id();
+                     	 int add_result = DAO.getAdminAddresult(add_ID);
+                     	 p.setResult(add_result);
+                     	 out.writeObject(p);
+                     	 out.flush();
+                     	 break;
+                      case 405: // 수정 패널에 고객 정보 불러오기
+                    	 String ch_ID = p.getDel_id(); 
+                    	 List<CustomerVO> ad_ch_list = DAO.getCustOne(ch_ID); // 
+                    	 p.setAd_clist(ad_ch_list);
                     	 out.writeObject(p);
                     	 out.flush();
-                    	// System.out.println("DAO 갔다 와서 Sign_in으로보냄");
-                    	break;
-                     case 402: // 회원정보 삭제
-                    	 System.out.println("402 요청 받음"); 
-                    	// CustomerVO ad_vo = new CustomerVO(); // VO 객체 생성
-                    	 String d_ID = p.getDel_id(); // 프로토콜로 받은 삭제할 아이디 변수에 저장
-                    	 System.out.println("p아이디저장");
-                    	// ad_vo.setCust_id(d_ID); // 변수에 저장된 회원아이디 VO에 저장
-                    	 int d_result = DAO.getDeleteresult(d_ID);// DAO로 sql실행하고 나온 정보(delete 결과는 int)를 저장
-                    	 System.out.println("DAO갔다옴");
-                    	 p.setResult(d_result); // 정보는 프로토콜을 통해 Sign_in으로 보냄 
-                    	 System.out.println("Sign_in보냄");
+                    	 break;
+                      case 406: // 수정할 데이터 DB 수정하기
+                    	 int ch_result = DAO.getChangInfoAd(p.getAdminChange_vo()); //프로토콜로 받은 vo를 get에서 세팅
+                    	 p.setResult(ch_result); // 반환된 결과 int를 프로토콜담음
                     	 out.writeObject(p);
                     	 out.flush();
-                    	 System.out.println("DAO 갔다 와서 Sign_in으로보냄");
                     	 break;
 					case 501: // 로그인
 						//지호
@@ -205,6 +223,20 @@ public class CP_Client extends Thread{
 						out.writeObject(p);
 						out.flush();
 						break;
+					case 601: // 영화 정보
+						System.out.println("cp_client cmd601");
+						List<M_movieVO> ad_mlist = DAO.getMMsList();
+						p.setMslist(ad_mlist);
+						out.writeObject(p);
+						out.flush();
+						break;
+					case 603: // 영화 삭제
+						String delMovie = p.getDelMovie();
+						int dm_result = DAO.getM_movieDelete(delMovie);
+						p.setResult(dm_result);
+		                out.writeObject(p);
+		                out.flush();
+		                break;              	
 					}
 				}
 			} catch (Exception e) {

@@ -44,6 +44,10 @@ public class Protocol implements Serializable{
 	
 	List<CustomerVO> ad_clist; // 전체보기 목록 : DAO에서 return한 값 변수이름으로 선언하고 게터세터
 	String del_id;
+	CustomerVO adminChange_vo;
+	
+	String delMovie;
+	List<M_movieVO> mslist;
 	
 	
 	public List<CustomerVO> getAd_clist() {
@@ -136,4 +140,23 @@ public class Protocol implements Serializable{
 	public void setL_vo(LoginInfo_VO l_vo) {
 		this.l_vo = l_vo;
 	}
+	public CustomerVO getAdminChange_vo() {
+		return adminChange_vo;
+	}
+	public void setAdminChange_vo(CustomerVO adminChange_vo) {
+		this.adminChange_vo = adminChange_vo;
+	}
+	public String getDelMovie() {
+		return delMovie;
+	}
+	public void setDelMovie(String delMovie) {
+		this.delMovie = delMovie;
+	}
+	public List<M_movieVO> getMslist() {
+		return mslist;
+	}
+	public void setMslist(List<M_movieVO> mslist) {
+		this.mslist = mslist;
+	}
+	
 }
