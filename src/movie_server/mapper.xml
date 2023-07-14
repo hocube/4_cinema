@@ -180,7 +180,7 @@
 	<update id="changeinfo" parameterType="movie_server.CustomerVO">
 		update customer 
 		set cust_name = #{cust_name}, cust_birth = #{cust_birth}
-        where cust_id = #{cust_id};
+        where cust_id = #{cust_id}
 	</update>
 	
 	<!-- 득윤 -->

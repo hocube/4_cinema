@@ -53,7 +53,7 @@ public class Sign_in extends JFrame implements Runnable {
 
 	JPanel contentPane;
 	public JPanel pg; // 다른 패널들을 담을 패널
-	public CardLayout card; // 형식
+	public CardLayout card; 
 
 	private JTextField signin_id_tf;
 	private JTextField signin_pw_tf;
@@ -76,7 +76,6 @@ public class Sign_in extends JFrame implements Runnable {
 	public LoginInfo_VO lvo;
 	public Pay pay;
 	public PointChargeDialog pointcharge;
-	// public Menu menu;
 	public MobileTicket m_ticket;
 	public TicketList t_list;
 	public Ticket_before_pay tb_pay;
@@ -90,17 +89,15 @@ public class Sign_in extends JFrame implements Runnable {
 	public Admin_order_panel o_admin;
 	public Admin_Snack_panel s_admin;
 	public Admin_movie_panel m_admin;
-	// public Snack snack;
 	public S_Menu1 snack1;
 	public S_Menu2 snack2;
 	public S_Menu3 snack3;
 
-	public Protocol p; // 다른 화면에서 호출하기 위해 추가
+	public Protocol p; 
 
 	public Sign_in() {
 		super("4딸라-필름");
 
-		// 이부분 추가 = 혜지
 		card = new CardLayout();
 		pg = new JPanel();
 		pg.setLayout(card);
@@ -146,7 +143,7 @@ public class Sign_in extends JFrame implements Runnable {
 		signin_signup_bt.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		contentPane.add(signin_signup_bt);
 
-		setLocationRelativeTo(null); // 화면 가운데
+		setLocationRelativeTo(null); 
 		setContentPane(contentPane);
 
 		JButton signin_login_bt = new JButton("로그인");
@@ -159,7 +156,7 @@ public class Sign_in extends JFrame implements Runnable {
 		contentPane.add(signin_login_bt);
 		setVisible(true);
 
-		// [0710수정](139~144) 회원가입은 로그인 성공 후에 들어가는게 회원가입 부분만 따로 뺐습니다 -혜지
+		//회원가입은 로그인 성공 후에 들어가게 따로 뺐음.
 		sign_up = new Sign_up(this);
 		setContentPane(pg);
 
@@ -211,15 +208,8 @@ public class Sign_in extends JFrame implements Runnable {
 
 	}
 
-	/*
-	 * [0709] 로그인 성공시에만 패널을 초기화 수정 전에는 로그인 하기 전에 모든 화면이 생성되어 있었습니다. 다음 화면들은 전부 로그인한
-	 * 회원 정보를 필요로합니다. 따라서 로그인 성공시에만 다음 화면을 생성하여 현재 접속한 회원정보를 다른 화면에서도 사용할 수 있게
-	 * 수정했습니다.
-	 */
+	
 	public void LoginSuccess() {
-//		card = new CardLayout();
-//		pg = new JPanel();
-//		pg.setLayout(card);
 
 		main_login = new Main_login(this);
 		sign_up = new Sign_up(this);
@@ -237,7 +227,6 @@ public class Sign_in extends JFrame implements Runnable {
 		s_admin = new Admin_Snack_panel(this);
 		m_admin = new Admin_movie_panel(this);
 		admin = new Admin_panel(this);
-		// snack = new Snack(this);
 		snack1 = new S_Menu1(this);
 		snack2 = new S_Menu2(this);
 		snack3 = new S_Menu3(this);
@@ -254,7 +243,6 @@ public class Sign_in extends JFrame implements Runnable {
 		pg.add(ts_map, "ts_map");
 		pg.add(t_seat, "t_seat");
 
-		// pg.add(snack, "snack");
 		pg.add(admin, "admin");
 		pg.add(s_admin, "s_admin");
 		pg.add(c_admin, "c_admin");
@@ -325,15 +313,12 @@ public class Sign_in extends JFrame implements Runnable {
 						break;
 					case 105: // 예매 취소
 						int result = p.getResult();
-						System.out.println("sign_in run() 105 : " + result);
 						if (result == 1) {
 							JOptionPane.showMessageDialog(getParent(), "예매가 취소되었습니다.");
-
 							MobileTicket_VO m_vo = new MobileTicket_VO();
 							m_vo.setCust_id(cvo.getCust_id());
 							p.setM_vo(m_vo);
-
-							p.setCmd(104); // 티켓 목록 다시 보여주는 명령어 전송
+							p.setCmd(104);
 							out.writeObject(p);
 							out.flush();
 						} else
@@ -343,30 +328,25 @@ public class Sign_in extends JFrame implements Runnable {
 						List<TicketBox_VO> movieList = p.getT_list();
 						System.out.println(movieList);
 						to_main.addMovieListToTable(movieList);
-						// 영화목록은 성공, 건들지말자.
 						break;
 					case 302:
 						List<TicketBox_VO> movieTimes = p.getT_list();
 						to_main.addTimeListToTable(movieTimes);
-						// 상영시간표는 성공, 건들지말자.
 						break;
-					case 303:
-						// 포스터 클릭시 해당영화이름 가져가서 table1에 가져오기 - 지혜
+					case 303: // 포스터 클릭시 해당 영화이름 가져가서 table1에 가져오기
 						TicketBox_VO movieChoice = p.getT_vo();
 						System.out.println("여기까지왔나");
 						to_main.updateChoiceTable(movieChoice);
 						card.show(pg, "to_main");
-						// 영화목록이 하나뜨면 그것을 클릭했을때, 시간뜨게하는 cmd
 						p.setCmd(302);
 						out.writeObject(p);
 						out.flush();
 						break;
-					// 민서
-					case 401: // 고객정보 전체 받기
+					case 401: // 관리자 고객정보 전체 받기
 						List<CustomerVO> ad_custList = p.getAd_clist();// VO의 게터세터중 get(DAO에서 지정한 return변수명)
 						c_admin.adminCustListToTable(ad_custList);
 						break; 
-					case 402: // 고객정보 삭제 후 int로 성공유무 받기
+					case 402: // 관리자 고객정보 삭제 후 int로 성공유무 받기
 						int ad_result = p.getResult();
 						if (ad_result > 0) {
 							JOptionPane.showMessageDialog(getParent(), "고객정보 삭제 완료");
@@ -374,7 +354,7 @@ public class Sign_in extends JFrame implements Runnable {
 							JOptionPane.showMessageDialog(getParent(), "삭제 실패");
 						}
 						break;
-					case 403: // ID로 검색후 회원정보 받기(List로받음)
+					case 403: // 관리자 ID로 검색후 회원정보 받기(List로받음)
 						if(p.getAd_clist() != null) {
 							List<CustomerVO> ad_custOne = p.getAd_clist();
 							c_admin.adminCustListToTable(ad_custOne);
@@ -382,7 +362,7 @@ public class Sign_in extends JFrame implements Runnable {
 							JOptionPane.showMessageDialog(getParent(), "데이터가 없습니다");
 						}
 						break;
-					case 404: //관리자 권한 추가 성공하면 알림 보내기
+					case 404: // 관리자 권한 추가 성공하면 알림 보내기
 						int adminok_result = p.getResult();
 						if(adminok_result> 0) {
 						JOptionPane.showMessageDialog(getParent(), "관리자 권한이 생성되었습니다");
@@ -404,61 +384,41 @@ public class Sign_in extends JFrame implements Runnable {
 						}
 						break;
 					case 501: // 로그인
-						// 지호
-						System.out.println("Sign_in의 501");
-
 						if (p.getC_vo() != null) {
 							cvo = p.getC_vo();
-
 							// 화면 초기화
 							LoginSuccess();
 							if (p.getC_vo().getDelete_yn().equals("1")) {
 								JOptionPane.showMessageDialog(getParent(), "탈퇴한 회원 입니다. 관리자에게 문의 하세요");
-								init();// 텍스트필드 초기화
+								init();
 							}
-
 							if (p.getC_vo().getAdmin_yn().equals("0") && p.getC_vo().getDelete_yn().equals("0")) {
 								// 로그인 성공
 								String name = p.getC_vo().getCust_name();
-								System.out.println(name + " 님 로그인 성공");
-
 								JOptionPane.showMessageDialog(getParent(), name + " 님 반갑습니다.");
-
 								card.show(pg, "main_login");
-								System.out.println("메인창 화면 전환 성공");
 							} else if (p.getC_vo().getAdmin_yn().equals("1")) {
 								card.show(pg, "admin"); // 관리자 페이지로 이동
 								JOptionPane.showMessageDialog(getParent(), "관리자 로그인 성공");
-								// 관리자팀은 먼저 카드선언하는위에 관리자 화면단 선언해주고 여기에 써주세요.
-								// 관리자 로그인시 버퍼인지, 메인이 잠시보였다가 관리자페이지로 뜸. 이건 수정하거나
-								// 봐야할 필요성있음 ****
 							}
-
 						} else {
 							// 로그인 실패
 							JOptionPane.showMessageDialog(getParent(), "가입 정보 없음");
-							init();// 텍스트필드 초기화
+							init();
 						}
 						break;
-
-					case 502: // 회원가입 -혜지
-						System.out.println("signin 502cmd");
+					case 502: // 회원가입
 						loginRes = p.getResult();
 						sign_up.loginRes();
 						break;
-
-					case 503: // 아이디 중복체크 -혜지
-						System.out.println("signin cmd");
+					case 503: // 아이디 중복체크
 						iddck = p.getResult();
-						System.out.println(iddck);
 						sign_up.dupchk();
 						break;
 					case 504: // 로그아웃
-						System.out.println("signin 504cmd");
 						logoutRes = p.getResult();
 						logoutRes();
 					case 507: // 탈퇴
-						System.out.println("signin 507cmd 탈퇴 왔니?");
 						init();
 						break;
 					case 601:
@@ -467,7 +427,6 @@ public class Sign_in extends JFrame implements Runnable {
 					case 603:
 						int ad_resultmv = p.getResult();
 						m_admin.adminResultalert(ad_resultmv);
-						System.out.println("sign_in 603 ");
 						break;
 					}			
 				}
@@ -483,9 +442,6 @@ public class Sign_in extends JFrame implements Runnable {
 			try {
 				CustomerVO c_vo = new CustomerVO();
 				Protocol p = new Protocol();
-
-				System.out.println("아이디:" + signin_id_tf.getText());
-				System.out.println("비번:" + signin_pw_tf.getText());
 
 				// 1. CustomerVo에 입력한 아이디와 비번 세팅
 				c_vo.setCust_id(signin_id_tf.getText());
