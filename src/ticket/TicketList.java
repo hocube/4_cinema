@@ -55,7 +55,7 @@ public class TicketList extends JPanel{
 		Panel.add(headerPanel, BorderLayout.NORTH);
 
 		// JTable의 컬럼 이름 배열
-		String[] columnNames = { "예매번호", "영화제목", "상영일자", "시작시간", "상영관", "좌석정보" };
+		String[] columnNames = { "예매번호", "영화제목", "상영일자", "상영시간", "상영관", "좌석정보" };
 
 		// 빈 JTable 생성
 		DefaultTableModel model = new DefaultTableModel(new Object[0][columnNames.length], columnNames);

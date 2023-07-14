@@ -32,23 +32,20 @@ import movie_server.Protocol;
 import movie_server.TicketBox_VO;
 import pay.Pay;
 import pay.PointChargeDialog;
-
+import snackbar.S_Menu1;
+import snackbar.S_Menu2;
+import snackbar.S_Menu3;
+import snackbar.admin_Customer_panel;
+import snackbar.admin_Snack_panel;
+import snackbar.admin_movie_panel;
+import snackbar.admin_order_panel;
+import snackbar.admin_panel;
 import ticket.MobileTicket;
 import ticket.TicketList;
 import ticketbox.Ticket_before_pay;
 import ticketbox.Ticket_office_main;
 import ticketbox.Ticket_seat;
 import ticketbox.Ticket_seat_map;
-import snackbar.S_Menu1;
-import snackbar.S_Menu2;
-import snackbar.S_Menu3;
-import snackbar.Snack;
-import snackbar.admin_Customer_panel;
-import snackbar.admin_movie_panel;
-import snackbar.admin_panel;
-import snackbar.admin_Snack_panel;
-import snackbar.admin_order_panel;
-import snackbar.admin_panel;
 
 public class Sign_in extends JFrame implements Runnable {
 
@@ -90,10 +87,7 @@ public class Sign_in extends JFrame implements Runnable {
 	public admin_order_panel o_admin;
 	public admin_Snack_panel s_admin;
 	public admin_movie_panel m_admin;
-	// public Snack snack;
-	public S_Menu1 snack1;
-	public S_Menu2 snack2;
-	public S_Menu3 snack3;
+
 
 	public Protocol p; // 다른 화면에서 호출하기 위해 추가
 
@@ -236,10 +230,6 @@ public class Sign_in extends JFrame implements Runnable {
 		s_admin = new admin_Snack_panel(this);
 		m_admin = new admin_movie_panel(this);
 		admin = new admin_panel(this);
-		// snack = new Snack(this);
-		snack1 = new S_Menu1(this);
-		snack2 = new S_Menu2(this);
-		snack3 = new S_Menu3(this);
 
 		setContentPane(pg);
 
@@ -260,9 +250,6 @@ public class Sign_in extends JFrame implements Runnable {
 		pg.add(o_admin, "o_admin");
 		pg.add(m_admin, "m_admin");
 		pg.add(m_admin, "m_admin");
-		pg.add(snack1, "snack1");
-		pg.add(snack2, "snack2");
-		pg.add(snack3, "snack3");
 
 	}
 
@@ -275,7 +262,7 @@ public class Sign_in extends JFrame implements Runnable {
 			// 지호-집: 192.168.0.11
 			// 192.168.0.80 지혜
 			// 192.168.0.34
-			s = new Socket("192.168.0.11", 7780);
+			s = new Socket("192.168.0.78", 7780);
 			out = new ObjectOutputStream(s.getOutputStream());
 			in = new ObjectInputStream(s.getInputStream());
 
@@ -430,7 +417,6 @@ public class Sign_in extends JFrame implements Runnable {
 						System.out.println("signin 504cmd");
 						logoutRes = p.getResult();
 						logoutRes();
-						break;
 					case 507: // 탈퇴
 						System.out.println("signin 507cmd 탈퇴 왔니?");
 						init();

@@ -302,7 +302,10 @@ public class Main_login extends JPanel {
 
 							signin.out.writeObject(p);
 							signin.out.flush();
-
+							
+							// 오류나면 빼기
+							JOptionPane.showMessageDialog(null, "충전이 완료되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+							
 							signin.cvo.setPoint(signin.cvo.getPoint() + amount);
 							login_point_label.setText("잔여포인트 : " + signin.cvo.getPoint());
 						} catch (Exception e2) {
