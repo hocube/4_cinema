@@ -52,7 +52,6 @@ public class Admin_movie_panel extends JPanel {
 		m_sc.setLocation(6, 10);
 		add(m_sc);
 		
-//		m_table.setEnabled(false);
 		m_table.getTableHeader().setReorderingAllowed(false);
 		m_table.getTableHeader().setResizingAllowed(false); 
 				
@@ -97,15 +96,7 @@ public class Admin_movie_panel extends JPanel {
 		m_back.setBounds(610, 696, 172, 35);
 		add(m_back);
 		
-		
-		
-		m_insert.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			//	AdminMovieAdd adminMovieAdd = new AdminMovieAdd();		
-			}
-		});
+
 		
 		// 영화 정보 전체보기
 		m_all.addActionListener(new ActionListener() {			
@@ -113,7 +104,6 @@ public class Admin_movie_panel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					m_tableModel.setNumRows(0);
-					System.out.println("p601 요청!!!!");
 					Protocol p = new Protocol();
 					p.setCmd(601);
 					sign_in.out.writeObject(p);
@@ -130,13 +120,11 @@ public class Admin_movie_panel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					m_tableModel.setNumRows(0);
-					System.out.println("p602 요청!!!!");
 					Protocol p = new Protocol();
 					p.setCmd(602);
 					sign_in.out.writeObject(p);
 					sign_in.out.flush();
 				} catch (Exception e2) {
-					System.out.println(e2+"602 p 에러");
 				}
 				
 			}
@@ -146,26 +134,6 @@ public class Admin_movie_panel extends JPanel {
 		
 		
 
-//		// 콤보박스 검색
-//		m_search.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				try {
-//					m_tableModel.setNumRows(0);
-//					System.out.println("p602 요청!!!!");
-//					Protocol p = new Protocol();
-//					p.setCmd(602);
-//					sign_in.out.writeObject(p);
-//					sign_in.out.flush();
-//				} catch (Exception e2) {
-//					System.out.println(e2+"602 p 에러");
-//				}
-//				
-//			}
-//		});
-
-		
 		m_delete.setEnabled(false); // 테이블 열을 선택하지 않으면 삭제버튼 비활성화
 		//테이블에서 열 선택해서 정보를 담는 이벤트
 		m_table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {			
@@ -197,13 +165,11 @@ public class Admin_movie_panel extends JPanel {
 					}	
 		                try {
 							Protocol p = new Protocol();
-							System.out.println("p603 요청!!!@@");
 							p.setCmd(603); //프로토콜로 CP_client한테 요청
 							p.setDelMovie(selectedName2); // 삭제할 id 프로토콜에 set
 							sign_in.out.writeObject(p);
 							sign_in.out.flush();
 						} catch (Exception e2) {
-							System.out.println(e2 +"m_delete err");
 						}
 		                selectedName2 = null; // 변수 초기화
 		                m_delete.setEnabled(false); // 삭제 후 버튼 비활성화

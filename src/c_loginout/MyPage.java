@@ -119,31 +119,26 @@ public class MyPage extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				while (true) {
 					String ch_pw = JOptionPane.showInputDialog("변경할 비밀번호를 입력해주세요");
-					System.out.println("마이페이지 입장 비밀번호 입력" + ch_pw);
-					
-					// 취소 버튼을 누르면 아무 작업도 수행하지 않고 반복문을 종료합니다.
-		            if (ch_pw == null) {
-		                break;
-		            }
 
-		            try {
-		                // 4글자 미만 수정 안됨.
-		                if (ch_pw.length() < 4) {
+					// 취소 버튼을 누르면 아무 작업도 수행하지 않고 반복문을 종료합니다.
+					if (ch_pw == null) {
+						break;
+					}
+
+					try {
+						// 4글자 미만 수정 안됨.
+						if (ch_pw.length() < 4) {
 							JOptionPane.showMessageDialog(null, "비밀번호를 4글자 이상 입력해주세요.", "알림",
 									JOptionPane.WARNING_MESSAGE);
 						} else {
 							CustomerVO c_vo = new CustomerVO();
 							Protocol p = new Protocol();
 
-							// 여기에 값이 없다고함 signin.lvo.getCust_id()
+							
 							c_vo.setCust_id(signin.cvo.getCust_id());
 							c_vo.setCust_password(ch_pw);
-							System.out.println("받은 값(아이디): " + c_vo.getCust_id());
-							System.out.println("받은 값(비번): " + c_vo.getCust_password());
 
 							p.setC_vo(c_vo);
-							System.out.println(p.getC_vo().getCust_id());
-							System.out.println(p.getC_vo().getCust_password());
 
 							p.setCmd(505);
 
@@ -153,7 +148,7 @@ public class MyPage extends JPanel {
 							signin.cvo.setCust_password(ch_pw);
 							// 알림 창 띄우기
 							JOptionPane.showMessageDialog(null, "비밀번호 변경 성공", "알림", JOptionPane.INFORMATION_MESSAGE);
-							
+
 							break;
 						}
 
@@ -172,13 +167,13 @@ public class MyPage extends JPanel {
 					String ch_phone = JOptionPane.showInputDialog("변경할 핸드폰 번호를 입력해주세요");
 
 					// 취소 버튼을 누르면 아무 작업도 수행하지 않고 반복문을 종료합니다.
-		            if (ch_phone == null) {
-		                break;
-		            }
+					if (ch_phone == null) {
+						break;
+					}
 
-		            try {
-		                // 4글자 미만 수정 안됨.
-		                if (ch_phone.length() < 6) {
+					try {
+						// 4글자 미만 수정 안됨.
+						if (ch_phone.length() < 6) {
 							JOptionPane.showMessageDialog(null, "핸드폰 번호를 정확하게 입력해주세요.", "알림",
 									JOptionPane.WARNING_MESSAGE);
 						} else {
@@ -187,19 +182,14 @@ public class MyPage extends JPanel {
 
 							c_vo.setCust_id(signin.cvo.getCust_id());
 							c_vo.setCust_phone(ch_phone);
-							System.out.println("받은 값(아이디): " + c_vo.getCust_id());
-							System.out.println("받은 값(폰번호): " + c_vo.getCust_phone());
 
 							p.setC_vo(c_vo);
-							System.out.println(p.getC_vo().getCust_id());
-							System.out.println(p.getC_vo().getCust_phone());
 
 							p.setCmd(506);
 
 							signin.out.writeObject(p);
 							signin.out.flush();
 
-							System.out.println("프로토콜506 보내기");
 							// 알림 창 띄우기
 							JOptionPane.showMessageDialog(null, "핸드폰 번호 변경 성공", "알림", JOptionPane.INFORMATION_MESSAGE);
 
@@ -230,14 +220,11 @@ public class MyPage extends JPanel {
 						c_vo.setDelete_yn("1");
 
 						p.setC_vo(c_vo);
-						System.out.println(p.getC_vo().getCust_id());
-						System.out.println(p.getC_vo().getDelete_yn());
 
 						p.setCmd(507);
 						signin.out.writeObject(p);
 						signin.out.flush();
-						System.out.println("프로토콜507 보내기");
-						
+
 						JOptionPane.showMessageDialog(null, "탈퇴가 완료되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
 						sign_in.card.show(sign_in.pg, "sign_in");
 					}

@@ -24,7 +24,7 @@ public class Admin_order_panel extends JPanel {
 	Object ob[][] = new Object[0][4];
 	String[] title = { "주문번호", "이름", "주문품목", "가격" };
 	private JTextField textField;
-	public String selectedName1; // 선택된 열의 ID를 저장할 변수, 보내야 해서 public으로 설정
+	public String selectedName1; 
 
 	public Admin_order_panel(Sign_in signin) {
 
@@ -38,7 +38,6 @@ public class Admin_order_panel extends JPanel {
 		jscroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		jscroll.setSize(776, 620);
 		jscroll.setLocation(6, 10);
-		// table.setEnabled(false); // 테이블수정 불가 메서드. 삭제버튼 누를때 확인
 		add(jscroll);
 
 		JButton btnNewButton = new JButton("주문 취소");

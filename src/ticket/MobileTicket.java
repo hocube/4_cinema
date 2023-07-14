@@ -36,7 +36,6 @@ public class MobileTicket extends JDialog {
 
 	public MobileTicket(Frame parent) {
 		super(parent, "모바일 티켓", true);
-		//this.sign_in = signin;
 		this.setModal(true); 
 		
 		MainP = new JPanel();

@@ -4,7 +4,7 @@
  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
 
-	<!-- 회원가입할때 customer 테이블에서 정보를 삽입한다. 혜지 --> 
+	<!-- 회원가입할때 customer 테이블에서 정보를 삽입한다. --> 
 	<insert id="customerIns" parameterType="movie_server.CustomerVO">
 		insert into customer(cust_id, cust_password, cust_name, cust_birth, cust_phone, admin_yn, delete_yn, point)
 		values(#{cust_id},#{cust_password},#{cust_name},#{cust_birth},#{cust_phone},#{admin_yn},#{delete_yn},#{point})
@@ -18,7 +18,6 @@
 	</select>
 
 	<!-- 로그인한 회원 정보 Login_info에 삽입 -->
-	<!-- 지호 -->
 	<insert id="loginInfoInsert"
 		parameterType="movie_server.CustomerVO">
 		insert into login_info(cust_id, cust_name, point)
@@ -59,7 +58,7 @@
       WHERE cust_id = #{cust_id}
    </update>
 	
-	<!-- 지호 -->
+
 	<!-- Customer 에서 현재 로그인 한 회원정보 가져오기 -->
    <select id="getMemberLogin" resultType="movie_server.CustomerVO">
       SELECT * FROM customer
@@ -86,7 +85,7 @@
 		#{theater_seat})
 	</insert>
 
-	<!-- 포인트 충전 -->
+
 	<!-- CUSTOMER 테이블의 POINT 업데이트 -->
 	<update id="updateCustomerPoint"
 		parameterType="movie_server.Pay_VO">
@@ -128,7 +127,7 @@
 
 
 
-	<!-- 지혜 -->
+
 	<!--영화목록 전체 가져오기 -->
 	<select id="movieList" resultType="movie_server.TicketBox_VO">
 		select movie_name from movie
@@ -161,7 +160,7 @@
 		WHERE movie_name  = #{movie_name }
 	</select>
 	
-	<!-- 민서 -->
+
 	<!-- 회원정보 전체 출력  -->
 	<select id="custList" resultType="movie_server.CustomerVO">
 		 select * from customer order by cust_id
@@ -183,12 +182,12 @@
         where cust_id = #{cust_id}
 	</update>
 	
-	<!-- 득윤 -->
+
 	<!-- moiveid로 영화정보 삭제 -->
 	<delete id="m_movieDelete" parameterType="String">
 		delete from movie_schedule where movie_id = #{movie_id}
 	</delete>
-<!-- 영화 스케쥴표 전체보기 -->
+	<!-- 영화 스케쥴표 전체보기 -->
 	<select id="m_mslist" resultType="movie_server.M_movieVO">
 		SELECT * FROM movie_schedule order by movie_id
 	</select>

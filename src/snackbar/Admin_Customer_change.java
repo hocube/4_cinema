@@ -113,13 +113,12 @@ public class Admin_Customer_change extends JPanel {
 		btnNewButton.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					//Admin_Customer_panel 패널 테이블에 선택된 cust_id를 가져옴;
+				try {					
 					String custinfor_a = sign_in.c_admin.selectedName1;
 					CustomerVO vo = new CustomerVO();
 					Protocol p = new Protocol();
-					vo.setCust_id(custinfor_a);//VO에 cust_id, cust_name, cust_birth 세팅 (쿼리문에 사용)
-					vo.setCust_name(textField.getText());//이 정보들로 update할것
+					vo.setCust_id(custinfor_a);
+					vo.setCust_name(textField.getText());
 					vo.setCust_birth(textField_1.getText());
 					p.setCmd(406);
 					p.setAdminChange_vo(vo);

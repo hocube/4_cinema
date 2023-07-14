@@ -35,10 +35,8 @@ import movie_server.MobileTicket_VO;
 import movie_server.Protocol;
 import movie_server.TicketBox_VO;
 
-//이걸로 합치기!
-//매표소 만들기 
 public class Ticket_office_main extends JPanel {
-	// 필요한 것들 선언하자
+
 	Sign_in sign_in;
 
 	String selectedMovieName;
@@ -175,27 +173,22 @@ public class Ticket_office_main extends JPanel {
 		lblNewLabel_10 = new JLabel();
 		lblNewLabel_10.setBounds(656, 573, 100, 15);  //극장명 들어갈 공간
 		this.add(lblNewLabel_10);
-		// db정보로 넣기
 
 		lblNewLabel_10_1 = new JLabel();  //날짜가 들어갈 공간
 		lblNewLabel_10_1.setBounds(656, 598, 57, 15);
 		this.add(lblNewLabel_10_1);
-		// db정보로 넣기
 
 		lblNewLabel_10_2 = new JLabel();  //시간이 들어갈 공간
 		lblNewLabel_10_2.setBounds(656, 623, 100, 15);
 		this.add(lblNewLabel_10_2);
-		// db정보로 넣기
 
 		lblNewLabel_10_3 = new JLabel();  //금액이 들어갈 공간.
 		lblNewLabel_10_3.setBounds(656, 673, 57, 15);
 		this.add(lblNewLabel_10_3);
-		// db정보로 넣기
 
 		model1 = new DefaultTableModel(new Object[] { "영화 목록" }, 0);
 		table_1 = new JTable(model1);
 		jsp1 = new JScrollPane(table_1);
-		// jsp1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jsp1.setBounds(27, 94, 172, 221);
 		this.add(jsp1);
 
@@ -203,7 +196,6 @@ public class Ticket_office_main extends JPanel {
 		model2.addRow(new Object[] { "한국 ICT관" });
 		table_2 = new JTable(model2);
 		jsp2 = new JScrollPane(table_2);	
-		// table_2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jsp2.setBounds(211, 94, 172, 221);
 		this.add(jsp2);
 		
@@ -211,7 +203,6 @@ public class Ticket_office_main extends JPanel {
 		model3 = new DefaultTableModel(new Object[] { "상영 시간" }, 0);
 		table_3 = new JTable(model3);
 		jsp3 = new JScrollPane(table_3);
-		// table_3.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jsp3.setBounds(27, 469, 172, 221);
 		this.add(jsp3);
 		
@@ -219,19 +210,14 @@ public class Ticket_office_main extends JPanel {
 		btnNewButton_1 = new JButton("예매 하기");
 		btnNewButton_1.setBounds(450, 714, 115, 35);
 		this.add(btnNewButton_1);
-		// db정보로 넣기
 
 		btnNewButton_2 = new JButton("홈으로");
 		btnNewButton_2.setBounds(235, 714, 115, 35);
 		this.add(btnNewButton_2);
 
-		
-		//[7/11 추가 -지혜 , 영화포스터만 눌러서 들어갈경우, 한 이름밖에 안떠서 
-		//(여러개중에 하나만 자동클릭이 안되어, 한 영화목록만뜨게함)
-		//그래서 이 버튼을 추가해서 이자리에서 다른영화 더 볼수있도록 하기로함. 
 		more_bt = new JButton("+더보기");
 		more_bt.setBounds(100, 50, 95, 22);
-		this.add(more_bt);  //이건 포스터 눌렀을때만 클릭가능하게하고, 빠른예매는 비활성화하기.
+		this.add(more_bt);  
 		
 		String adultCountText = lblNewLabel_8_2.getText().replace("명", "");
 	    String childCountText = lblNewLabel_8_2_1.getText().replace("명", "");
@@ -304,7 +290,6 @@ public class Ticket_office_main extends JPanel {
 					 sign_in.card.show(sign_in.pg, "main_login");
 					 model1.setRowCount(0);
 					 model3.setRowCount(0);
-					 System.out.println("홈으로 버튼 누르면 초기화,메인");
 					 lblNewLabel_6.setIcon(null);
 					 lblNewLabel_8_2.setText("");
 					 lblNewLabel_8_2_1.setText("");
@@ -414,7 +399,6 @@ public class Ticket_office_main extends JPanel {
 					rowData[i] = table_2.getValueAt(select_theater, i);
 				}
 				lblNewLabel_10.setText(Arrays.toString(rowData));
-				System.out.println("ICT클릭 이벤트 성공");
 				// 입력이 잘되었는지 확인하기위한 콘솔출력
 			}
 
@@ -431,8 +415,6 @@ public class Ticket_office_main extends JPanel {
 					rowData[i] = table_3.getValueAt(select_theater, i);
 				}
 				lblNewLabel_10_2.setText(Arrays.toString(rowData));
-				System.out.println("시간클릭시 삽입성공");
-				// 입력이 잘되었는지 확인하기위한 콘솔출력
 		}
 
 		});
@@ -481,10 +463,6 @@ public class Ticket_office_main extends JPanel {
 			    } else if (movieTitle.equals("엘리멘탈")) {
 			    	return imagesFolder + "엘리멘탈.JPG";
 			    }
-			    //이미지 사용할때, 이미지도 같이 보내기, 위치경로 확인하기!!! *********************
-			    
-			    // 만약 해당하는 영화 제목에 이미지 파일이 없을 경우 null을 반환하거나 기본 이미지 경로를 반환할 수 있습니다.
-			    // 예시로 null 반환
 			    return null;
 		}
 		});
@@ -503,7 +481,6 @@ public class Ticket_office_main extends JPanel {
 		    	comboBox.setSelectedIndex(0);
 				comboBox_1.setSelectedIndex(0);
 				calendar.setDate(new Date());
-				//calendar.setSelectableDateRange(, null);
 		    	try {
 		    		Protocol p = new Protocol();
 		    		p.setCmd(302);
@@ -518,21 +495,15 @@ public class Ticket_office_main extends JPanel {
 		    
 		});
 		
-		
-		//[0711] 추가 -지혜
 		more_bt.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//영화포스터만을 눌러서 매표소에 왔을떄 더보기 버튼이 활성화된다. 
-				//더보기 버튼 눌렀을때 영화 목록을 가져오는 메서드 실행. 
-				//cmd (301) 과 동일.
 				try {
 					Protocol p = new Protocol();
 					p.setCmd(301);
 					sign_in.out.writeObject(p);
 					sign_in.out.flush();			
-					System.out.println("더보기cmd보냈나");
 					model1.setRowCount(0);
 					
 					more_bt.setEnabled(false);
@@ -554,27 +525,14 @@ public class Ticket_office_main extends JPanel {
 				 table_3.clearSelection();
 				 comboBox.setSelectedIndex(0);
 				 comboBox_1.setSelectedIndex(0);
-				 //calendar.setDate(new Date());
 			}
 		});
 		
 		
-	table_3.addMouseListener( new MouseAdapter() {
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			  
-			
-			
-			
-		}
-		
-	});
-		
-	}// 액션리스너 및 화면단 마지막 괄호
+	}
 
 	
 
-	/* 메서드 칸 */
 
 	// 성인과 아동을 각각 콤보박스를 클릭해서 각 가격이 나온것을 합쳐서 나올수있도록.
 	private void updateTotalPrice() {
@@ -597,7 +555,6 @@ public class Ticket_office_main extends JPanel {
 	public void addMovieListToTable(List<TicketBox_VO> movieList) {
 		
 		for (TicketBox_VO movie : movieList) {
-			//model1.addColumn("영화 목록");
 			model1.addRow(new Object[] { movie.getMovie_name() });
 
 		}
@@ -618,13 +575,7 @@ public class Ticket_office_main extends JPanel {
          for (TicketBox_VO movieTime : movieTimes) {
             
              model3.addRow(new Object[] {movieTime.getStart_time() + " - " + movieTime.getEnd_time()});
-             
-           
-             
-            
-         }
-        	 
-         
+         }   
      }
 	}
 	
@@ -643,7 +594,6 @@ public class Ticket_office_main extends JPanel {
 	public JButton getMoreButton() {
         return more_bt;
     }
-	
 
     public int getAdultCount() {
         return aCount;
@@ -653,4 +603,4 @@ public class Ticket_office_main extends JPanel {
         return cCount;
     }
 
-	}  //클래스의 마지막 괄호.
+	}

@@ -932,25 +932,6 @@ public class S_Menu1 extends JPanel {
 
 	}
 
-	/*
-	 * public List<OrderItem> getOrderList() {
-	 * 
-	 * List<OrderItem> orderList = new ArrayList<>();
-	 * 
-	 * for (int i = 0; i < tableModel.getRowCount(); i++) { String cust_id =
-	 * sign_in.p.getC_vo().getCust_id(); String p_name = (String)
-	 * tableModel.getValueAt(i, 0); LocalDate day = LocalDate.now(); int o_count =
-	 * (int) tableModel.getValueAt(i, 1); int o_price = (int)
-	 * tableModel.getValueAt(i, 2);
-	 * 
-	 * OrderItem item = new OrderItem(cust_id,p_name, o_count, o_price,day);
-	 * 
-	 * orderList.add(item); }
-	 * 
-	 * 
-	 * 
-	 * return orderList; }
-	 */
 	// 총 가격 업데이트 메소드
 	private void updateTotalPrice() {
 		int total = 0;

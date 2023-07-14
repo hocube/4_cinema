@@ -51,15 +51,7 @@ public class CP_Client extends Thread{
 						out.writeObject(p);
 						out.flush();
                         break;
-                    case 103: // 결제 완료 후 티켓 INSERT
-                    	System.out.println("===CP_Client의 case 103===");
-//                    	Pay_VO p_vo = p.getP_vo();
-//                    	result = DAO.getInsert(p_vo);
-//                    	p.setResult(result); // DB 삽입 작업의 결과를 설정
-//                    	System.out.println(result + "예매 완료!");
-                    	out.writeObject(p);
-                    	out.flush();
-                    	break;
+
                     case 104: // 티켓 리스트 띄우기
                     	List<MobileTicket_VO> m_list = DAO.getTicketList(p.m_vo.getCust_id());
                     	p.setM_list(m_list);
@@ -71,61 +63,50 @@ public class CP_Client extends Thread{
                     	p.setResult(result);
 						out.writeObject(p);
 						out.flush();
-						System.out.println("CP의 105번");
                     	break;
                     case 301 :   
-                    	//영화목록가져오라는 cmd   -지혜
-                    	  System.out.println("CP9 301입니다.");
+                    	//영화 목록 가져오기
                         List<TicketBox_VO> t_list = DAO.getMovie_name(); // 영화 목록을 DB에서 가져옴                  
-                        System.out.println("301담았다!!");
                         p.setT_list(t_list);
                         for (TicketBox_VO k : t_list) {
-							System.out.println(k);
-							System.out.println("301마지막, 여기까지왔는가? 지건!");
 						}
                         //영화 이름만 추출하여 문자열 배열로 변환                  
-                        out.writeObject(p); // 클라이언트에게 프로토콜 전송
+                        out.writeObject(p);
                         out.flush();
                          break;
                      case 302 :
-                    	//영화 시간 갖고오는 cmd   -지혜
-                         System.out.println("CP9 302입니다.");                         
+                    	//영화 시간 갖고오기                       
                          List<TicketBox_VO> movieTimes = DAO.getMovieTimes(getName());
-                         System.out.println("담아서 메인인으로 보내자");
                          p.setT_list(movieTimes);
                          out.writeObject(p);
                          out.flush();
-                         System.out.println("302마지막이올시다!");
                          break;
                      case 303:
-                    	//포스터 클릭한 영화 이름 갖고오기  -지혜
+                    	//포스터 클릭한 영화 이름 갖고오기
                     	 boolean alreadyExecuted = false;
                     	 if(alreadyExecuted) {
                     		 break;  //계속 무한 루프 돌아서, 이 case가 실행되었으면 멈추라는 뜻의 if문
-                    	 }
-                    	System.out.println("CP9 303입니다.");                     	
+                    	 }                 	
                     	TicketBox_VO one_movie = DAO.getMovieChoice(p.t_vo.getMovie_name());
                      	p.setT_vo(one_movie);
  						out.writeObject(p);
  						out.flush();
- 						System.out.println("303마지막이올시다! - 303호사는 쿠잔");
                      	break;		
-                     	//민서
-                     case 401: // 전체보기 요청
+                     case 401: // 관리자 전체보기
                      	 List<CustomerVO> ad_clist = DAO.getList(); //고객정보 전체 목록
                      	 p.setAd_clist(ad_clist);
-                     	 out.writeObject(p); // 요청한게 Sign_in을 상속받은 패널의 프로토콜이므로 받을때 sign_in으로 간다
+                     	 out.writeObject(p); 
                      	 out.flush();
                      	break;
-                      case 402: // 회원정보 삭제
-                     	 String d_ID = p.getDel_id(); // 프로토콜로 받은 삭제할 아이디 변수에 저장
-                     	 int d_result = DAO.getDeleteresult(d_ID);// DAO로 sql실행하고 나온 정보(delete 결과는 int)를 저장;
-                     	 p.setResult(d_result); // 정보는 프로토콜을 통해 Sign_in으로 보냄 
+                      case 402: // 관리자 회원정보 삭제
+                     	 String d_ID = p.getDel_id(); 
+                     	 int d_result = DAO.getDeleteresult(d_ID);
+                     	 p.setResult(d_result); 
                      	 out.writeObject(p);
                      	 out.flush();
                      	 break;
-                      case 403: //회원정보 ID로 검색
-                     	 String o_ID = p.getDel_id(); //고객 1명의 정보를 select할 쿼리문 조건의 cust_id 저장
+                      case 403: // 관리자 회원정보 ID로 검색
+                     	 String o_ID = p.getDel_id(); 
                      	 List<CustomerVO> ad_onelist = DAO.getCustOne(o_ID);
                      	 p.setAd_clist(ad_onelist);
                      	 out.writeObject(p);
@@ -138,38 +119,31 @@ public class CP_Client extends Thread{
                      	 out.writeObject(p);
                      	 out.flush();
                      	 break;
-                      case 405: // 수정 패널에 고객 정보 불러오기
+                      case 405: // 관리자 수정 패널에 고객 정보 불러오기
                     	 String ch_ID = p.getDel_id(); 
-                    	 List<CustomerVO> ad_ch_list = DAO.getCustOne(ch_ID); // 
+                    	 List<CustomerVO> ad_ch_list = DAO.getCustOne(ch_ID); 
                     	 p.setAd_clist(ad_ch_list);
                     	 out.writeObject(p);
                     	 out.flush();
                     	 break;
-                      case 406: // 수정할 데이터 DB 수정하기
-                    	 int ch_result = DAO.getChangInfoAd(p.getAdminChange_vo()); //프로토콜로 받은 vo를 get에서 세팅
-                    	 p.setResult(ch_result); // 반환된 결과 int를 프로토콜담음
+                      case 406: // 관리자 수정할 데이터 DB 수정하기
+                    	 int ch_result = DAO.getChangInfoAd(p.getAdminChange_vo()); 
+                    	 p.setResult(ch_result); 
                     	 out.writeObject(p);
                     	 out.flush();
                     	 break;
 					case 501: // 로그인
-						//지호
-						// 1. CustomerVo에 Protocol의 c_vo를 세팅.(Sign_in에서 입력받은 id/pw)
 						CustomerVO c_vo = p.getC_vo();
-						// 2. DB에서 받아온 결과값을 Protocol의 c_vo에 세팅.(Sign_in에서 입력받은 id/pw와 일치하는 회원정보)
 						p.setC_vo(DAO.getLogin(c_vo));
 						if(DAO.getLogin(c_vo) != null && p.getC_vo().getDelete_yn().equals("0")) {
-							// 로그인 성공시에만 Login_info 테이블에 삽입
 							DAO.loginInfoInsert(p.getC_vo());
 						}
 						out.writeObject(p);
 						out.flush();
 						break;					
 					case 502:	// 회원가입
-						System.out.println("cpclient 502 도촥~");
 						CustomerVO vo = p.getC_vo();
-						
 						int result502 = DAO.signup_getIns(vo);
-
 						if (result502 > 0) {
 							Protocol p502 = new Protocol();
 							p502.setCmd(502);
@@ -178,11 +152,8 @@ public class CP_Client extends Thread{
 							out.flush();
 						}
 						break;
-					case 503:	// 아이디 중복 확인
-						System.out.println("cp_client cmd503 왔음");
-						
+					case 503: // 아이디 중복 확인
 						int result503 = DAO.getIdChk(p.getC_vo().getCust_id());
-						System.out.println(result503);
 						
 						Protocol p503 = new Protocol();
 						p503.setCmd(503);
@@ -190,41 +161,31 @@ public class CP_Client extends Thread{
 						out.writeObject(p503);
 						out.flush();
 						break;
-					case 504:	// 로그아웃하기
-						System.out.println("cp_client cmd504 왔음");
-						
+					case 504: // 로그아웃
 						int result504 = DAO.loginInfoDelete(p.l_vo.getCust_id());
 						p.setResult(result504);
 						out.writeObject(p);
 						out.flush();
-						System.out.println("cpc504나가기");
 						break;
 					case 505: // 마이페이지에서 비밀번호 변경
 						int result505 = DAO.changePwd(p.c_vo);
-						System.out.println(result505);
 						p.setResult(result505);
 						out.writeObject(p);
 						out.flush();
 						break;
 					case 506: // 마이페이지에서 핸드폰 번호 변경
-						System.out.println("cp_client cmd 506 도착");
 						int result506 = DAO.changePhoneNum(p.c_vo);
-						System.out.println("DAO 다녀옴");
-						System.out.println(result506);
 						p.setResult(result506);
 						out.writeObject(p);
 						out.flush();
-						System.out.println("cpc506나가기");
 						break;
 					case 507: // 탈퇴
-						System.out.println("cp_client cmd 507 도착");
 						CustomerVO c_vo1 = p.getC_vo();
 						DAO.custDeleteAndLogout(c_vo1);
 						out.writeObject(p);
 						out.flush();
 						break;
 					case 601: // 영화 정보
-						System.out.println("cp_client cmd601");
 						List<M_movieVO> ad_mlist = DAO.getMMsList();
 						p.setMslist(ad_mlist);
 						out.writeObject(p);
@@ -244,12 +205,3 @@ public class CP_Client extends Thread{
 		}
 	}
 }
-
-/*
-// 마이바티스 셋팅하기 
-// 1. config.xml  만들기 - DB 접속
-// 2. mapper.xml 만들기 - 실제 SQL 작성하는파일 (실제 DB에 갖다와서 결과를 내보내는 파일)
-// 3. VO.java   - DB 에 들어갈 파라미터 및 결과를 저장을 담당하는 파일 (테이블의 컬럼명과 일치)
-// 4. DAO.java  - mapper와 연결되서 자바에서  DB 실행 시키는 파일 (DB 처리흔 클래스들을 모아놓은 파일)
-// 5. DBService - config.xml 파일을 읽고 MyBatis을 실행할 수 있도록 하는 파일  
-*/

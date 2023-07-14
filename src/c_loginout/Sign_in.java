@@ -40,8 +40,6 @@ import snackbar.Admin_movie_panel;
 import snackbar.Admin_order_panel;
 import snackbar.Admin_panel;
 import snackbar.S_Menu1;
-import snackbar.S_Menu2;
-import snackbar.S_Menu3;
 import ticket.MobileTicket;
 import ticket.TicketList;
 import ticketbox.Ticket_before_pay;
@@ -53,7 +51,7 @@ public class Sign_in extends JFrame implements Runnable {
 
 	JPanel contentPane;
 	public JPanel pg; // 다른 패널들을 담을 패널
-	public CardLayout card; 
+	public CardLayout card;
 
 	private JTextField signin_id_tf;
 	private JTextField signin_pw_tf;
@@ -90,10 +88,8 @@ public class Sign_in extends JFrame implements Runnable {
 	public Admin_Snack_panel s_admin;
 	public Admin_movie_panel m_admin;
 	public S_Menu1 snack1;
-	public S_Menu2 snack2;
-	public S_Menu3 snack3;
 
-	public Protocol p; 
+	public Protocol p;
 
 	public Sign_in() {
 		super("4딸라-필름");
@@ -143,7 +139,7 @@ public class Sign_in extends JFrame implements Runnable {
 		signin_signup_bt.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		contentPane.add(signin_signup_bt);
 
-		setLocationRelativeTo(null); 
+		setLocationRelativeTo(null);
 		setContentPane(contentPane);
 
 		JButton signin_login_bt = new JButton("로그인");
@@ -156,7 +152,7 @@ public class Sign_in extends JFrame implements Runnable {
 		contentPane.add(signin_login_bt);
 		setVisible(true);
 
-		//회원가입은 로그인 성공 후에 들어가게 따로 뺐음.
+		// 회원가입은 로그인 성공 후에 들어가게 따로 뺐음.
 		sign_up = new Sign_up(this);
 		setContentPane(pg);
 
@@ -208,14 +204,12 @@ public class Sign_in extends JFrame implements Runnable {
 
 	}
 
-	
 	public void LoginSuccess() {
 
 		main_login = new Main_login(this);
 		sign_up = new Sign_up(this);
 		mypage = new MyPage(this);
 		t_list = new TicketList(this);
-		// pay = new Pay(this);
 		tb_pay = new Ticket_before_pay(this);
 		to_main = new Ticket_office_main(this);
 		ts_map = new Ticket_seat_map(this);
@@ -228,8 +222,6 @@ public class Sign_in extends JFrame implements Runnable {
 		m_admin = new Admin_movie_panel(this);
 		admin = new Admin_panel(this);
 		snack1 = new S_Menu1(this);
-		snack2 = new S_Menu2(this);
-		snack3 = new S_Menu3(this);
 
 		setContentPane(pg);
 
@@ -250,20 +242,12 @@ public class Sign_in extends JFrame implements Runnable {
 		pg.add(o_admin, "o_admin");
 		pg.add(m_admin, "m_admin");
 		pg.add(snack1, "snack1");
-		pg.add(snack2, "snack2");
-		pg.add(snack3, "snack3");
 
 	}
 
 	// 서버 연결 메서드
 	private void connected() {
 		try {
-			// 혜지-집: 183.96.151.249
-			// 혜지-학원: 192.168.0.41
-			// 지호-학원: 192.168.0.78
-			// 지호-집: 192.168.0.11
-			// 192.168.0.80 지혜
-			// 192.168.0.34
 			s = new Socket("192.168.0.78", 7780);
 			out = new ObjectOutputStream(s.getOutputStream());
 			in = new ObjectInputStream(s.getInputStream());
@@ -279,7 +263,6 @@ public class Sign_in extends JFrame implements Runnable {
 			in.close();
 			out.close();
 			s.close();
-			System.out.println("프로그램 종료");
 			System.exit(0);
 		} catch (Exception e) {
 		}
@@ -324,18 +307,16 @@ public class Sign_in extends JFrame implements Runnable {
 						} else
 							JOptionPane.showMessageDialog(getParent(), "예매 취소가 실패하였습니다.");
 						break;
-					case 301:
+					case 301: //영화목록 갖고오기
 						List<TicketBox_VO> movieList = p.getT_list();
-						System.out.println(movieList);
 						to_main.addMovieListToTable(movieList);
 						break;
-					case 302:
+					case 302: //해당영화 시간갖고오기
 						List<TicketBox_VO> movieTimes = p.getT_list();
 						to_main.addTimeListToTable(movieTimes);
 						break;
 					case 303: // 포스터 클릭시 해당 영화이름 가져가서 table1에 가져오기
 						TicketBox_VO movieChoice = p.getT_vo();
-						System.out.println("여기까지왔나");
 						to_main.updateChoiceTable(movieChoice);
 						card.show(pg, "to_main");
 						p.setCmd(302);
@@ -345,7 +326,7 @@ public class Sign_in extends JFrame implements Runnable {
 					case 401: // 관리자 고객정보 전체 받기
 						List<CustomerVO> ad_custList = p.getAd_clist();// VO의 게터세터중 get(DAO에서 지정한 return변수명)
 						c_admin.adminCustListToTable(ad_custList);
-						break; 
+						break;
 					case 402: // 관리자 고객정보 삭제 후 int로 성공유무 받기
 						int ad_result = p.getResult();
 						if (ad_result > 0) {
@@ -355,18 +336,18 @@ public class Sign_in extends JFrame implements Runnable {
 						}
 						break;
 					case 403: // 관리자 ID로 검색후 회원정보 받기(List로받음)
-						if(p.getAd_clist() != null) {
+						if (p.getAd_clist() != null) {
 							List<CustomerVO> ad_custOne = p.getAd_clist();
 							c_admin.adminCustListToTable(ad_custOne);
-						}else {
+						} else {
 							JOptionPane.showMessageDialog(getParent(), "데이터가 없습니다");
 						}
 						break;
 					case 404: // 관리자 권한 추가 성공하면 알림 보내기
 						int adminok_result = p.getResult();
-						if(adminok_result> 0) {
-						JOptionPane.showMessageDialog(getParent(), "관리자 권한이 생성되었습니다");
-						}else {
+						if (adminok_result > 0) {
+							JOptionPane.showMessageDialog(getParent(), "관리자 권한이 생성되었습니다");
+						} else {
 							JOptionPane.showMessageDialog(getParent(), "이미 관리자 권한이 있는 아이디 입니다");
 						}
 						break;
@@ -374,12 +355,12 @@ public class Sign_in extends JFrame implements Runnable {
 						List<CustomerVO> ad_ch_custList = p.getAd_clist();
 						cc_admin.CustListInfo_admin(ad_ch_custList);
 						break;
-						
+
 					case 406: // 고객정보 수정후 int값 받음
 						int ad_ch_result = p.getResult();
 						if (ad_ch_result > 0) {
 							JOptionPane.showMessageDialog(getParent(), "고객 정보 수정이 완료되었습니다");
-						}else {
+						} else {
 							JOptionPane.showMessageDialog(getParent(), "수정할 정보 값이 잘못 입력되었습니다");
 						}
 						break;
@@ -428,7 +409,7 @@ public class Sign_in extends JFrame implements Runnable {
 						int ad_resultmv = p.getResult();
 						m_admin.adminResultalert(ad_resultmv);
 						break;
-					}			
+					}
 				}
 			} catch (Exception e) {
 			}
@@ -443,25 +424,18 @@ public class Sign_in extends JFrame implements Runnable {
 				CustomerVO c_vo = new CustomerVO();
 				Protocol p = new Protocol();
 
-				// 1. CustomerVo에 입력한 아이디와 비번 세팅
 				c_vo.setCust_id(signin_id_tf.getText());
 				c_vo.setCust_password(signin_pw_tf.getText());
-
-				// 2. id/pw가 담긴 CustomerVO를 Protocol의 c_vo에 세팅
 				p.setC_vo(c_vo);
-
-				// 3. cmd 501이라고 라벨를 붙임.
 				p.setCmd(501);
-
 				out.writeObject(p);
 				out.flush();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-
 		} else {
 			JOptionPane.showMessageDialog(getParent(), "아이디 / 비밀번호를 입력해주세요.");
-			System.out.println("입력하지않았을때 뜬다.");
+
 		}
 	}
 

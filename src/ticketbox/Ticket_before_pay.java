@@ -26,8 +26,6 @@ import pay.Pay;
 import ticket.MobileTicket;
 import ticket.TicketList;
 
-//이걸로 합치기!
-//결제정보창, 결제확인창
 public class Ticket_before_pay extends JPanel {
 	Sign_in sign_in;
 
@@ -107,14 +105,6 @@ public class Ticket_before_pay extends JPanel {
 		lblNewLabel_14 = new JLabel("금액"); // 총금액
 		lblNewLabel_14.setBounds(388, 573, 57, 15);
 		this.add(lblNewLabel_14);
-
-//		 lblNewLabel_15 = new JLabel("잔여포인트:");
-//		lblNewLabel_15.setBounds(501, 77, 80, 15);
-//		this.add(lblNewLabel_15);
-//		
-//		 lblNewLabel_16 = new JLabel("00000");
-//		lblNewLabel_16.setBounds(576, 77, 57, 15);
-//		this.add(lblNewLabel_16);
 
 		btnNewButton = new JButton("취소하기");
 		btnNewButton.setBounds(235, 714, 115, 35);

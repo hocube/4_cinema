@@ -32,7 +32,6 @@ import javax.swing.event.ChangeListener;
 
 import c_loginout.Sign_in;
 
-//이걸로 합치기!
 public class Ticket_seat extends JPanel {
 	Sign_in sign_in;
 
@@ -41,14 +40,13 @@ public class Ticket_seat extends JPanel {
 	JLabel lblNewLabel, lblNewLabel_1, lblNewLabel_2_1_1_1, lblNewLabel_6, lblNewLabel_7, lblNewLabel_7_1,
 			lblNewLabel_7_1_1, lblNewLabel_7_1_1_1, lblNewLabel_8, lblNewLabel_8_1, lblNewLabel_8_2, lblNewLabel_8_2_1,
 			lblNewLabel_9, lblNewLabel_10, lblNewLabel_11, lblNewLabel_10_1, lblNewLabel_10_2, lblNewLabel_10_3,
-			lblNewLabel_2, lblNewLabel_3, lblNewLabel_5; //+lblNewLabel_4
+			lblNewLabel_2, lblNewLabel_3, lblNewLabel_5;
 	JTextArea lblNewLabel_4;
 	JButton btnNewButton, btnNewButton_1, btnNewButton_1_1;
 
 	private int totalSelectedCount = 0; // 좌석 체크를 위한 변수선언
 	private JCheckBox[] checkboxArray;
 
-	// Icon ;
 	String theater, adultCount, childCount, date, time, amount, room, seat;
 	// 좌석선택창 정보 > 결제확인창으로 값 보내기 위한 변수선언
 
@@ -147,18 +145,11 @@ public class Ticket_seat extends JPanel {
 		lblNewLabel_3.setBounds(411, 56, 82, 15);
 		this.add(lblNewLabel_3);
 
-		/*lblNewLabel_4 = new JLabel();
-		lblNewLabel_4.setBounds(411, 105, 134, 436);
-		this.add(lblNewLabel_4);
-		lblNewLabel_4.setFont(new Font("굴림", Font.BOLD, 12));*/
-		// lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		//lblNewLabel_4 = new JLabel();
 		lblNewLabel_4 = new JTextArea();
 		lblNewLabel_4.setBounds(411, 105, 134, 436);
 		this.add(lblNewLabel_4);
 		lblNewLabel_4.setFont(new Font("굴림", Font.BOLD, 12));
-		
+
 		System.out.println(lblNewLabel_4);
 
 		btnNewButton_1 = new JButton("뒤로 가기");
@@ -195,58 +186,52 @@ public class Ticket_seat extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				
-				 String adultCountText = lblNewLabel_8_2.getText().replace("명", ""); 
-				 String childCountText = lblNewLabel_8_2_1.getText().replace("명", ""); 
-				 int aCount = Integer.parseInt(adultCountText); 
-				 int cCount =Integer.parseInt(childCountText); 
-				 //인원라벨에서 "명" 을 뻬고 나온 숫자를 인티저로 정수로 변환
-				 				 
-				 int totalSelectedCount = aCount + cCount;
-				 //성인과 아동 인원의 합
-				 
-				 int count2 = map.su2;
-				 //체크박스의 개수. 
-				 
-				 
-				 System.out.println("제대로된 인원이 나오나? "+ aCount + cCount + totalSelectedCount +count2 );
-				 if (count2 > totalSelectedCount) {
-					 JOptionPane.showMessageDialog(null," 인원만큼 좌석을 선택하세요.", "경고",JOptionPane.WARNING_MESSAGE); 
-					 
-					 
-				 } else if (count2 <totalSelectedCount) { 
-					 JOptionPane.showMessageDialog(null, " 인원만큼 좌석을 선택하세요.","경고", JOptionPane.WARNING_MESSAGE); 
-					 
-				 }  else if( count2 == totalSelectedCount) { 
-					 int res = JOptionPane.showOptionDialog(getParent(), "선택하신 좌석으로 예약할까요?", "좌석확인",
-								JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
-						if (res == 0) {
-							// 실제저장하는 코드
-							adultCount = lblNewLabel_8_2.getText(); // 성인인원 겟
-							childCount = lblNewLabel_8_2_1.getText(); // 아동인원 겟
-							date = lblNewLabel_10_1.getText(); // 날짜 겟
-							time = lblNewLabel_10_2.getText(); // 시간 겟
-							theater = lblNewLabel_11.getText(); // 상영관 겟
-							amount = lblNewLabel_10_3.getText(); // 금액 겟
-							seat = lblNewLabel_4.getText(); // 좌석 겟
-							
-							sign_in.card.show(sign_in.pg, "tb_pay"); // 결제확인창 뜨기
-							
-							sign_in.tb_pay.lblNewLabel_6.setText(adultCount); // 겟한거 집어넣기
-							sign_in.tb_pay.lblNewLabel_7.setText(childCount); // 겟한거 집어넣기
-							sign_in.tb_pay.lblNewLabel_11.setText(date); // 겟한거 집어넣기
-							sign_in.tb_pay.lblNewLabel_13.setText(seat);// 겟한거 집어넣기
-							sign_in.tb_pay.lblNewLabel_14.setText(amount);// 겟한거 집어넣기
-							sign_in.tb_pay.lblNewLabel_12.setText(theater);// 겟한거 집어넣기
-							
+				String adultCountText = lblNewLabel_8_2.getText().replace("명", "");
+				String childCountText = lblNewLabel_8_2_1.getText().replace("명", "");
+				int aCount = Integer.parseInt(adultCountText);
+				int cCount = Integer.parseInt(childCountText);
+				// 인원라벨에서 "명" 을 뻬고 나온 숫자를 인티저로 정수로 변환
 
-						} else if (res == 1) {
-							return;
-						}
-							
-					 
-			}
-				 
+				int totalSelectedCount = aCount + cCount;
+				// 성인과 아동 인원의 합
+
+				int count2 = map.su2;
+				// 체크박스의 개수.
+
+				if (count2 > totalSelectedCount) {
+					JOptionPane.showMessageDialog(null, " 인원만큼 좌석을 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);
+
+				} else if (count2 < totalSelectedCount) {
+					JOptionPane.showMessageDialog(null, " 인원만큼 좌석을 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);
+
+				} else if (count2 == totalSelectedCount) {
+					int res = JOptionPane.showOptionDialog(getParent(), "선택하신 좌석으로 예약할까요?", "좌석확인",
+							JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+					if (res == 0) {
+						// 실제저장하는 코드
+						adultCount = lblNewLabel_8_2.getText(); // 성인인원 겟
+						childCount = lblNewLabel_8_2_1.getText(); // 아동인원 겟
+						date = lblNewLabel_10_1.getText(); // 날짜 겟
+						time = lblNewLabel_10_2.getText(); // 시간 겟
+						theater = lblNewLabel_11.getText(); // 상영관 겟
+						amount = lblNewLabel_10_3.getText(); // 금액 겟
+						seat = lblNewLabel_4.getText(); // 좌석 겟
+
+						sign_in.card.show(sign_in.pg, "tb_pay"); // 결제확인창 뜨기
+
+						sign_in.tb_pay.lblNewLabel_6.setText(adultCount); // 겟한거 집어넣기
+						sign_in.tb_pay.lblNewLabel_7.setText(childCount); // 겟한거 집어넣기
+						sign_in.tb_pay.lblNewLabel_11.setText(date); // 겟한거 집어넣기
+						sign_in.tb_pay.lblNewLabel_13.setText(seat);// 겟한거 집어넣기
+						sign_in.tb_pay.lblNewLabel_14.setText(amount);// 겟한거 집어넣기
+						sign_in.tb_pay.lblNewLabel_12.setText(theater);// 겟한거 집어넣기
+
+					} else if (res == 1) {
+						return;
+					}
+
+				}
+
 			}
 		});
 
@@ -260,8 +245,7 @@ public class Ticket_seat extends JPanel {
 				lblNewLabel_4.setText("");
 				map.resetSelectedSeats();
 				map.resetCheckBoxes();
-				
-				
+
 				if (selectedOption.equals("개나리")) {
 
 					map.setBounds(32, 250, 300, 300);
@@ -285,8 +269,5 @@ public class Ticket_seat extends JPanel {
 			}
 		});
 
-	} // 액션리스너의 마지막괄호
-
-	// 메서드칸 =======================
-
-} // 클래스의 마지막 괄호
+	}
+}

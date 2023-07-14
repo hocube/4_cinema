@@ -36,11 +36,6 @@ public class Admin_Customer_panel extends JPanel {
 		this.sign_in = signin;
 		this.setLayout(null);
 
-		/*
-		 * 원래 jtable 코드 table = new JTable(); table.setBounds(6, 10, 776, 620);
-		 * add(table);
-		 */
-
 		tableModel = new DefaultTableModel(ob, title);
 		table = new JTable(tableModel);
 		jscroll = new JScrollPane(table);
@@ -48,7 +43,6 @@ public class Admin_Customer_panel extends JPanel {
 		jscroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		jscroll.setSize(776, 620);
 		jscroll.setLocation(6, 10);
-		// table.setEnabled(false); // 테이블수정 불가 메서드. 삭제버튼 누를때 확인
 		add(jscroll);
 
 		JButton btnNewButton = new JButton("관리자 권한 추가");
@@ -109,7 +103,6 @@ public class Admin_Customer_panel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					tableModel.setNumRows(0); // 테이블 초기화
-					// 프로토콜에 cmd(401:전체보기)를 담아서 요청
 					Protocol p = new Protocol();
 					p.setCmd(401);
 					sign_in.out.writeObject(p);

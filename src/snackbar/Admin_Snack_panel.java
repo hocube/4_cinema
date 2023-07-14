@@ -24,7 +24,7 @@ public class Admin_Snack_panel extends JPanel {
 	Object ob[][] = new Object[0][4];
 	String[] title = { "발주번호", "품목명", "수량", "가격" };
 	private JTextField textField;
-	public String selectedName1; // 선택된 열의 ID를 저장할 변수, 보내야 해서 public으로 설정
+	public String selectedName1; 
 
 	public Admin_Snack_panel(Sign_in signin) {
 		this.sign_in = signin;
@@ -35,8 +35,7 @@ public class Admin_Snack_panel extends JPanel {
 		jscroll = new JScrollPane(table);
 		jscroll.setBounds(6, 10, 776, 620);
 		jscroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		jscroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		// table.setEnabled(false); // 테이블수정 불가 메서드. 삭제버튼 누를때 확인
+		jscroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);		
 		add(jscroll);
 
 		JButton btnNewButton = new JButton("발주 취소");

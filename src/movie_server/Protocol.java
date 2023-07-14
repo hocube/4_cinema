@@ -5,28 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Protocol implements Serializable{
-	/*
-		cmd 0 -> 종료(접속해제, 로그아웃..?)
-		
-		cmd 501 -> 로그인
-		cmd 502 -> 회원가입
-		cmd 503 -> 아이디중복(result, 0 = 없음 / 1이상 = 있음)
-		
-		100: 종료
-	 	101: 로그인 한 회원 찾기 (나중에)
-	 	102: 로그인한 회원 잔여포인트 가져오기
-	 	103: 결제 완료 후 티켓 INSERT
-	 	104: 현재 로그인 회원의 티켓 리스트 출력
-	 	
-	 	302: 상영시간표 시작 시간 출력 
-	 	303 :잔여포인트
 
-		
-	*/
 	int cmd;
 	int result;
 	String msg;
-	// 로그아웃할때 시험삼아해보지
 	String result_st;
 	
 	List<CustomerVO> c_list;
@@ -38,11 +20,10 @@ public class Protocol implements Serializable{
 	
 	List<TicketBox_VO> t_list;
 	TicketBox_VO t_vo;
-	List<Seat_VO> s_list;
 	
 	LoginInfo_VO l_vo;
 	
-	List<CustomerVO> ad_clist; // 전체보기 목록 : DAO에서 return한 값 변수이름으로 선언하고 게터세터
+	List<CustomerVO> ad_clist; 
 	String del_id;
 	CustomerVO adminChange_vo;
 	
@@ -121,12 +102,6 @@ public class Protocol implements Serializable{
 	}
 	public void setT_vo(TicketBox_VO t_vo) {
 		this.t_vo = t_vo;
-	}
-	public List<Seat_VO> getS_list() {
-		return s_list;
-	}
-	public void setS_list(List<Seat_VO> s_list) {
-		this.s_list = s_list;
 	}
 	public String getResult_st() {
 		return result_st;

@@ -37,7 +37,7 @@ public class Main_login extends JPanel {
 		// 로고이미지
 		JLabel logo = new JLabel();
 		logo.setFont(new Font("맑은 고딕", Font.BOLD, 16));
-		logo.setBounds(99, 126, 575, 180); // 131
+		logo.setBounds(99, 126, 575, 180);
 
 		this.add(logo);
 
@@ -140,7 +140,7 @@ public class Main_login extends JPanel {
 		// 이미지 로딩 및 크기 조절
 		ImageIcon originalIcon4 = new ImageIcon("src/images/logo.png");
 		Image originalImage4 = originalIcon4.getImage();
-		int lblWidth = logo.getWidth(); // 라벨의 크기를 얻어옵니다.
+		int lblWidth = logo.getWidth(); 
 		int lblHeight = logo.getHeight();
 		Image resizedImage4 = originalImage4.getScaledInstance(lblWidth, lblHeight, java.awt.Image.SCALE_SMOOTH);
 
@@ -148,7 +148,7 @@ public class Main_login extends JPanel {
 		ImageIcon resizedIcon4 = new ImageIcon(resizedImage4);
 
 		// 라벨에 이미지 아이콘 설정
-		logo.setIcon(resizedIcon4); // logo_lbl은 JLabel 객체입니다.
+		logo.setIcon(resizedIcon4); 
 
 		// 1. 모바일티켓 버튼
 		mobile_ticket_bt.addActionListener(new ActionListener() {
@@ -184,8 +184,6 @@ public class Main_login extends JPanel {
 				if (option == JOptionPane.OK_OPTION) {
 					char[] password = passwordField.getPassword();
 					String mypage_inpw = new String(password);
-					System.out.println("마이페이지 입장 비밀번호 입력: " + mypage_inpw);
-
 					if (mypage_inpw.equals(signin.cvo.getCust_password())) {
 						signin.card.show(signin.pg, "mypage");
 					} else {
@@ -203,13 +201,8 @@ public class Main_login extends JPanel {
 				if (r == 0) {
 
 					try {
-						System.out.println("다이얼로그 값 받기 완");
-
 						LoginInfo_VO l_vo = new LoginInfo_VO();
 						Protocol p = new Protocol();
-						System.out.println("로그아웃 프로토콜 생성완");
-
-						// l_vo.setCust_id(signin.p.getC_vo().getCust_id());
 						l_vo.setCust_id(signin.cvo.getCust_id());
 						p.setL_vo(l_vo);
 						p.setCmd(504);
@@ -231,9 +224,6 @@ public class Main_login extends JPanel {
 						(Frame) SwingUtilities.getWindowAncestor(Main_login.this));
 				dialog.setPointChargeListener(new PointChargeListener() {
 					public void onPointCharge(int amount) {
-
-						// PointChargeDialog에서 선택한 포인트
-						System.out.println("충전된 포인트: " + amount);
 
 						try {
 							Pay_VO p_vo = new Pay_VO();
@@ -275,7 +265,6 @@ public class Main_login extends JPanel {
 					t_vo.setMovie_name(m_1);
 					p.setT_vo(t_vo);
 					p.setCmd(303);
-					System.out.println("303로 cmd 보냈니?");
 
 					signin.out.writeObject(p);
 					signin.out.flush();
@@ -301,8 +290,6 @@ public class Main_login extends JPanel {
 					t_vo.setMovie_name(m_2);
 					p.setT_vo(t_vo);
 					p.setCmd(303);
-					System.out.println("303로 cmd 보냈니?");
-
 					signin.out.writeObject(p);
 					signin.out.flush();
 
@@ -328,7 +315,6 @@ public class Main_login extends JPanel {
 					t_vo.setMovie_name(m_3);
 					p.setT_vo(t_vo);
 					p.setCmd(303);
-					System.out.println("303로 cmd 보냈니?");
 
 					signin.out.writeObject(p);
 					signin.out.flush();
@@ -354,7 +340,6 @@ public class Main_login extends JPanel {
 					t_vo.setMovie_name(m_4);
 					p.setT_vo(t_vo);
 					p.setCmd(303);
-					System.out.println("303로 cmd 보냈니?");
 
 					signin.out.writeObject(p);
 					signin.out.flush();
@@ -378,15 +363,13 @@ public class Main_login extends JPanel {
 					sign_in.card.show(signin.pg, "to_main");
 
 					sign_in.to_main.model1.setRowCount(0);
-					System.out.println("메인에서 홈으로 버튼 누르면 초기화,여긴홈");
-					System.out.println("빠른예매버튼 눌러 매표소 전환 성공");
-					// 영화목록은 성공, 건들지말자.
+
+				
 
 					Protocol p = new Protocol();
 					p.setCmd(301);
 					sign_in.out.writeObject(p);
 					sign_in.out.flush();
-					System.out.println("cmd보냈나");
 
 					sign_in.to_main.getMoreButton().setEnabled(false);
 				} catch (Exception e2) {

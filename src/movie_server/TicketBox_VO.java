@@ -6,11 +6,7 @@ public class TicketBox_VO implements Serializable{
 	private String movie_name,start_time,end_time ,All_time;
 	private String theater_id;
 	private int remaining_point;
-	
-	
-	
-	
-	
+
 	public String getAll_time() {
 		return All_time;
 	}
